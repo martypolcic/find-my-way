@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('flight_prices', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('flight_id')->constrained('flights')->cascadeOnDelete();
             $table->timestamps();
         });
     }

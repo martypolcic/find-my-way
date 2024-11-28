@@ -12,7 +12,7 @@ class AirportController extends Controller
      */
     public function index()
     {
-        //
+        return Airport::all();
     }
 
     /**
@@ -20,6 +20,6 @@ class AirportController extends Controller
      */
     public function show(Airport $airport)
     {
-        //
+        return $airport;
     }
 }

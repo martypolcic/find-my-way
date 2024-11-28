@@ -12,7 +12,7 @@ class FlightController extends Controller
      */
     public function index()
     {
-        //
+        return Flight::all();
     }
 
     /**
@@ -20,6 +20,6 @@ class FlightController extends Controller
      */
     public function show(Flight $flight)
     {
-        //
+        return $flight;
     }
 }

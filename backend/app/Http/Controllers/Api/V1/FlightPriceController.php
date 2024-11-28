@@ -12,7 +12,7 @@ class FlightPriceController extends Controller
      */
     public function index()
     {
-        //
+        return FlightPrice::all();
     }
 
     /**
@@ -20,6 +20,6 @@ class FlightPriceController extends Controller
      */
     public function show(FlightPrice $flightPrice)
     {
-        //
+        return $flightPrice;
     }
 }

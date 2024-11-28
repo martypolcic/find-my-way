@@ -9,4 +9,8 @@ class FlightPrice extends Model
 {
     /** @use HasFactory<\Database\Factories\FlightPriceFactory> */
     use HasFactory;
+
+    function flight() {
+        return $this->belongsTo(Flight::class);
+    }
 }

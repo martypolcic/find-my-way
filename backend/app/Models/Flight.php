@@ -10,10 +10,6 @@ class Flight extends Model
     /** @use HasFactory<\Database\Factories\FlightFactory> */
     use HasFactory;
 
-    protected array $fillable = [
-        'departureAirportIataCode'
-    ];
-
     function departureAirport() {
         return $this->belongsTo(Airport::class, 'departure_airport_id');
     }

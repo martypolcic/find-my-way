@@ -42,9 +42,11 @@ class RyanairApi implements Api {
     }
 
     private function transformFlight(array $flightData) {
-        return new Flight([
-            'departureAirportIataCode' => $flightData['outbound']['arrivalAirport']['iataCode'],
-        ]);
+        $flight = new Flight();
+
+        $flight->departureAirportIataCode = $flightData['outbound']['arrivalAirport']['iataCode'];
+
+        return $flight;
     }
 
     public function searchFlights(SearchParams $searchParams): array

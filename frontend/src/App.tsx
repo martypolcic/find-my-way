@@ -1,11 +1,11 @@
 import './App.css'
-import HelloWorld from './components/HelloWorld'
+import SearchFlightsForm from './components/SearchFlightsForm'
 
 function App() {
   return (
     <>
       <div>
-        <HelloWorld />
+        <SearchFlightsForm />
       </div>
     </>
   )

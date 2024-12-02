@@ -1,0 +1,9 @@
+.HelloWorld {
+    h1 {
+        @apply text-2xl;
+    }
+
+    button {
+        @apply p-2 bg-blue-500 text-white rounded-lg;
+    }
+}

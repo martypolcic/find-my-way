@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Flight;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\V1\FlightCollection;
+use App\Http\Resources\V1\FlightResource;
 
 class FlightController extends Controller
 {
@@ -12,7 +14,7 @@ class FlightController extends Controller
      */
     public function index()
     {
-        return Flight::all();
+        return new FlightCollection(Flight::all());
     }
 
     /**
@@ -20,6 +22,6 @@ class FlightController extends Controller
      */
     public function show(Flight $flight)
     {
-        return $flight;
+        return new FlightResource($flight);
     }
 }

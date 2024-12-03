@@ -19,10 +19,10 @@ class AirportFactory extends Factory
         $city = $this->faker->unique()->city;
         
         return [
-            'iataCode' => $this->faker->unique()->regexify('[A-Z]{3}'),
-            'airportName' => $city . ' Airport',
-            'cityName' => $city,
-            'countryName' => $this->faker->unique()->country,
+            'iata_code' => $this->faker->unique()->regexify('[A-Z]{3}'),
+            'airport_name' => $city . ' Airport',
+            'city_name' => $city,
+            'country_name' => $this->faker->unique()->country,
         ];
     }
 }

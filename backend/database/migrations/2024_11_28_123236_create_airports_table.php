@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('airports', function (Blueprint $table) {
             $table->id();
-            $table->string('iataCode');
-            $table->string('airportName');
-            $table->string('cityName');
-            $table->string('countryName');
+            $table->string('iata_code');
+            $table->string('airport_name');
+            $table->string('city_name');
+            $table->string('country_name');
             $table->timestamps();
         });
     }

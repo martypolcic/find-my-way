@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Validation\Rules\Exists;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\FlightPrice>
@@ -17,7 +18,8 @@ class FlightPriceFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'price_value' => $this->faker->randomFloat(2, 0, 1000),
+            'currency_code' => $this->faker->currencyCode(),
         ];
     }
 }

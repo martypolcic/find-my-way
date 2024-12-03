@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('flight_prices', function (Blueprint $table) {
             $table->id();
+            $table->string('price_value');
+            $table->string('currency_code');
             $table->foreignId('flight_id')->constrained('flights')->cascadeOnDelete();
             $table->timestamps();
         });

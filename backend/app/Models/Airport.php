@@ -10,6 +10,13 @@ class Airport extends Model
     /** @use HasFactory<\Database\Factories\AirportFactory> */
     use HasFactory;
 
+    protected $fillable = [
+        'iata_code',
+        'airport_name',
+        'city_name',
+        'country_name',
+    ];
+
     function flights() {
         return $this->hasMany(Flight::class);
     }

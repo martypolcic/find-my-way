@@ -6,6 +6,7 @@ use App\Models\Airport;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\V1\AirportCollection;
 use App\Http\Resources\V1\AirportResource;
+use App\Http\Requests\V1\StoreAirportRequest;
 
 class AirportController extends Controller
 {
@@ -23,5 +24,13 @@ class AirportController extends Controller
     public function show(Airport $airport)
     {
         return new AirportResource($airport);
+    }
+    
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store (StoreAirportRequest $request)
+    {
+        return new AirportResource(Airport::create($request->all()));
     }
 }

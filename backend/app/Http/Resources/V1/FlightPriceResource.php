@@ -14,6 +14,11 @@ class FlightPriceResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'flightId' => $this->flight_id,
+            'priceValue' => $this->price_value,
+            'currencyCode' => $this->currency_code,
+        ];
     }
 }

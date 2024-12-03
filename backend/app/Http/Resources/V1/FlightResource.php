@@ -14,6 +14,14 @@ class FlightResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'flightNumber' => $this->flight_number,
+            'flightKey' => $this->flight_key,
+            'departureDate' => $this->departure_date,
+            'arrivalDate' => $this->arrival_date,
+            'departureAirportId' => $this->departure_airport_id,
+            'arrivalAirportId' => $this->arrival_airport_id,
+        ];
     }
 }

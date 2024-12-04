@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\V1\AirportCollection;
 use App\Http\Resources\V1\AirportResource;
 use App\Http\Requests\V1\StoreAirportRequest;
+use App\Http\Requests\V1\UpdateAirportRequest;
 
 class AirportController extends Controller
 {
@@ -32,5 +33,14 @@ class AirportController extends Controller
     public function store(StoreAirportRequest $request)
     {
         return new AirportResource(Airport::create($request->validated()));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(UpdateAirportRequest $request, Airport $airport)
+    {
+        $airport->update($request->validated());
+        return new AirportResource($airport);
     }
 }

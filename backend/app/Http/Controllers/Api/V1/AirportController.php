@@ -29,8 +29,8 @@ class AirportController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store (StoreAirportRequest $request)
+    public function store(StoreAirportRequest $request)
     {
-        return new AirportResource(Airport::create($request->all()));
+        return new AirportResource(Airport::create($request->validated()));
     }
 }

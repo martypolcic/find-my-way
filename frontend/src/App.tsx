@@ -8,7 +8,6 @@ function App() {
   const [activeTab, setActiveTab] = useState('searchFlights');
 
   function handleTabChange(tabName: string) {
-    console.log('Tab changed:', tabName);
     setActiveTab(tabName);
   }
 

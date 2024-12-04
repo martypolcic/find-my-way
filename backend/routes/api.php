@@ -17,7 +17,7 @@ Route::group(
         'namespace' => 'App\Http\Controllers\Api\V1'
     ],
     function () {
-        Route::apiResource('airports', AirportController::class)->only(['index', 'show', 'store', 'update']); 
+        Route::apiResource('airports', AirportController::class)->only(['index', 'show', 'store', 'update', 'destroy']); 
         Route::apiResource('flights', FlightController::class)->only(['index', 'show']);
         Route::apiResource('flight-prices', FlightPriceController::class)->only(['index', 'show']);
         Route::get('search-flights', [SearchFlightsController::class, 'index']);

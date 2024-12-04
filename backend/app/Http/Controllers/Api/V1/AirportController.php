@@ -43,4 +43,13 @@ class AirportController extends Controller
         $airport->update($request->validated());
         return new AirportResource($airport);
     }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Airport $airport)
+    {
+        $airport->delete();
+        return response()->noContent();
+    }
 }

@@ -1,0 +1,12 @@
+.airport-form, .airport-row {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+
+    .airport-button-wrapper {
+        display: flex;
+        gap: 10px;
+    }
+}

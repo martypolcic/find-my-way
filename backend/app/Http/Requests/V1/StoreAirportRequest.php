@@ -3,6 +3,7 @@
 namespace App\Http\Requests\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 
 class StoreAirportRequest extends FormRequest
 {
@@ -22,20 +23,20 @@ class StoreAirportRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'iataCode' => 'required|string|max:3',
-            'airportName' => 'required|string|max:255',
-            'cityName' => 'required|string|max:255',
-            'countryName' => 'required|string|max:255',
+            'iata_code' => 'required|string|max:3',
+            'airport_name' => 'required|string|max:255',
+            'city_name' => 'required|string|max:255',
+            'country_name' => 'required|string|max:255',
         ];
     }
 
-    protected function prepareForValidation()
+    protected function prepareForValidation(): void
     {
         $this->merge([
-            'iata_code' => strtoupper($this->iataCode),
-            'airport_name' => ucwords($this->airportName),
-            'city_name' => ucwords($this->cityName),
-            'country_name' => ucwords($this->countryName),
+            'iata_code' => Str::upper($this->iata_code),
+            'airport_name' => Str::ucfirst($this->airport_name),
+            'city_name' => Str::ucfirst($this->city_name),
+            'country_name' => Str::ucfirst($this->country_name),
         ]);
     }
 }

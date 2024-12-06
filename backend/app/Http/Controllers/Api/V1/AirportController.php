@@ -4,10 +4,9 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Airport;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\V1\AirportRequest;
 use App\Http\Resources\V1\AirportCollection;
 use App\Http\Resources\V1\AirportResource;
-use App\Http\Requests\V1\StoreAirportRequest;
-use App\Http\Requests\V1\UpdateAirportRequest;
 
 class AirportController extends Controller
 {
@@ -30,7 +29,7 @@ class AirportController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreAirportRequest $request)
+    public function store(AirportRequest $request)
     {
         return new AirportResource(Airport::create($request->validated()));
     }
@@ -38,7 +37,7 @@ class AirportController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateAirportRequest $request, Airport $airport)
+    public function update(AirportRequest $request, Airport $airport)
     {
         $airport->update($request->validated());
         return new AirportResource($airport);

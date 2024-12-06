@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import './App.css'
-import AirportCollection from './components/AirportCollection'
 import Header from './components/Header'
 import SearchFlightsForm from './components/SearchFlightsForm'
 
@@ -16,7 +15,6 @@ function App() {
     <>
       <Header onChangeTab={handleTabChange}/>
       {activeTab === 'searchFlights' && <SearchFlightsForm />}
-      {activeTab === 'airports' && <AirportCollection />}
     </>
   )
 }

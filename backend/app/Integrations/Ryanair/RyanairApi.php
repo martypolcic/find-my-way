@@ -7,6 +7,7 @@ use App\Integrations\Params\SearchParams;
 use App\Models\Flight;
 use Generator;
 use GuzzleHttp\Client as HttpClient;
+use DateTimeImmutable;
 
 class RyanairApi implements Api {
     private readonly HttpClient $httpClient;
@@ -18,17 +19,16 @@ class RyanairApi implements Api {
     }
 
     // TODO: ryanair results can be paginated, we should handle that
-    private function fetchRyanairFlights(string $fromAirport): Generator {
-        $today = date("Y-m-d");
-        $tomorrow = date("Y-m-d", strtotime("+1 day"));
+    private function fetchRyanairFlights(SearchParams $searchParams): Generator {
+        $departureDate = $searchParams->getDepartureDate()->format('Y-m-d');
 
         $response = $this->httpClient->get('oneWayFares', [
             'query' => [
-                'departureAirportIataCode' => $fromAirport,
-                'outboundDepartureDateFrom' => $today,
-                'outboundDepartureDateTo' => $tomorrow,
+                'departureAirportIataCode' => $searchParams->getDepartureAirportIataCode(),
+                'outboundDepartureDateFrom' => $departureDate,
+                'outboundDepartureDateTo' => $departureDate,
                 'market' => 'en-gb',
-                'adultPaxCount' => 1,
+                'adultPaxCount' => $searchParams->getPassengerCount(),
                 'outboundDepartureTimeFrom' => '00:00',
                 'outboundDepartureTimeTo' => '23:59',
             ],
@@ -44,7 +44,13 @@ class RyanairApi implements Api {
     private function transformFlight(array $flightData) {
         $flight = new Flight();
 
+        $flight->flightNumber = $flightData['outbound']['flightNumber'];
+        $flight->flightKey = $flightData['outbound']['flightKey'];
+        $flight->departureDate = new DateTimeImmutable($flightData['outbound']['departureDate']);
+        $flight->arrivalDate = new DateTimeImmutable($flightData['outbound']['arrivalDate']);
         $flight->departureAirportIataCode = $flightData['outbound']['arrivalAirport']['iataCode'];
+        $flight->arrivalAirportIataCode = $flightData['outbound']['departureAirport']['iataCode'];
+        
 
         return $flight;
     }
@@ -53,7 +59,7 @@ class RyanairApi implements Api {
     {
         $flights = [];
         
-        foreach ($this->fetchRyanairFlights($searchParams->getDepartureAirportIataCode()) as $flight) {
+        foreach ($this->fetchRyanairFlights($searchParams) as $flight) {
             $flights[] = $flight;
         }
 

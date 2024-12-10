@@ -2,11 +2,7 @@
 
 namespace App\Integrations\Params;
 
-use App\Integrations\Api;
-use App\Models\Flight;
 use DateTimeImmutable;
-use Generator;
-use GuzzleHttp\Client as HttpClient;
 
 class SearchParams {
     private string $departureAirportIataCode;
@@ -16,11 +12,11 @@ class SearchParams {
     private function __construct(
         string $departureAirportIataCode,
         string $departureDate,
-        int $passengerCount
+        string|int $passengerCount // TODO: Do this the right way, does laravel convert string to int ?
     ) {
         $this->departureAirportIataCode = $departureAirportIataCode;
         $this->departureDate = new DateTimeImmutable($departureDate);
-        $this->passengerCount = $passengerCount;
+        $this->passengerCount = (int) $passengerCount;
     }
 
     public function getDepartureAirportIataCode(): string {

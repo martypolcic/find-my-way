@@ -4,6 +4,7 @@ namespace App\Integrations\Ryanair;
 
 use App\Integrations\Api;
 use App\Integrations\Params\SearchParams;
+use App\Models\Airport;
 use App\Models\Flight;
 use Generator;
 use GuzzleHttp\Client as HttpClient;
@@ -44,12 +45,14 @@ class RyanairApi implements Api {
     private function transformFlight(array $flightData) {
         $flight = new Flight();
 
-        $flight->flightNumber = $flightData['outbound']['flightNumber'];
-        $flight->flightKey = $flightData['outbound']['flightKey'];
-        $flight->departureDate = new DateTimeImmutable($flightData['outbound']['departureDate']);
-        $flight->arrivalDate = new DateTimeImmutable($flightData['outbound']['arrivalDate']);
-        $flight->departureAirportIataCode = $flightData['outbound']['arrivalAirport']['iataCode'];
-        $flight->arrivalAirportIataCode = $flightData['outbound']['departureAirport']['iataCode'];
+        $flight->flight_number = $flightData['outbound']['flightNumber'];
+        $flight->flight_key = $flightData['outbound']['flightKey'];
+        $flight->departure_date = new DateTimeImmutable($flightData['outbound']['departureDate']);
+        $flight->arrival_date = new DateTimeImmutable($flightData['outbound']['arrivalDate']);
+        $flight->departure_airport_id = $flightData['outbound']['departureAirport']['iataCode'];
+        $flight->arrival_airport_id = $flightData['outbound']['arrivalAirport']['iataCode'];
+        // $flight->departure_airport_id = Airport::where('iata_code', $flightData['outbound']['departureAirport']['iataCode'])->first()->id;
+        // $flight->arrival_airport_id = Airport::where('iata_code', $flightData['outbound']['arrivalAirport']['iataCode'])->first()->id;
         
 
         return $flight;

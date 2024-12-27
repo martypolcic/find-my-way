@@ -18,6 +18,15 @@ class Airport extends Model
         'longitude_deg',
     ];
 
+    public function isValid() {
+        return 
+            isset($this->iata_code) &&
+            isset($this->airport_name) &&
+            isset($this->country_name) &&
+            isset($this->latitude_deg) &&
+            isset($this->longitude_deg);
+    }
+
     function flights() {
         return $this->hasMany(Flight::class);
     }

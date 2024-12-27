@@ -2,13 +2,15 @@
 namespace App\Integrations\OurAirports;
 
 use GuzzleHttp\Client as HttpClient;
-use Generator;
 use App\Models\Airport;
-use Exception;
+use LogicException;
+use Generator;
+use App\Integrations\OurAirports\OurAirportsValidator;
+
+use function PHPUnit\Framework\isEmpty;
 
 class OurAirports {
     private readonly array $airports;
-    private readonly array $regions;
     private readonly array $countries;
     private readonly HttpClient $httpClient;
 
@@ -16,56 +18,62 @@ class OurAirports {
         $this->httpClient = new HttpClient([
             'base_uri' => 'https://davidmegginson.github.io/ourairports-data/',
         ]);
-
-        $airportsFile = $this->httpClient->get('airports.csv');
-        $countrysFile = $this->httpClient->get('countries.csv');
-
-
-        $this->airports = $this->filterAirports($this->parseCsv($airportsFile->getBody()));
-        $this->countries = $this->parseCsv($countrysFile->getBody());
     }
 
-    private function parseCsv($csv) {
+    private function fetchCountries() {
+        $response = $this->httpClient->get('countries.csv');
+        $csv = $response->getBody()->getContents();
         $lines = explode("\n", $csv);
-        $header = str_getcsv(array_shift($lines));
         $data = [];
-    
-        foreach ($lines as $line) {
-            if (empty($line)) {
-                continue;
-            }
-            $fields = str_getcsv($line);
-            $data[] = array_combine($header, $fields);
+        // Skip the first (header) line and last (extra \n) line
+        for ($i=1; $i < count($lines) - 1; $i++) {
+            $parts = str_getcsv($lines[$i]);
+            $data[$parts[1]] = $parts[2];
         }
-    
-        return $data;
+
+        $this->countries = $data;
     }
 
-    private function filterAirports($airports) {
-        return array_filter($airports, function($airport) {
-            return $airport['iata_code'] !== '' &&
-            strpos($airport['type'], 'airport') !== false &&
-            $airport['latitude_deg'] !== '' &&
-            $airport['longitude_deg'] !== '' &&
-            $airport['iso_country'] !== '' &&
-            $airport['municipality'] !== '';
-        });
+    private function getCountryByCode($code) {
+        $countryName = $this->countries[$code] ?? null;
+        if ($countryName === null)
+            throw new LogicException("Country with code $code not found");
+
+        return $countryName;
     }
 
-    private function getCountryName($isoCountry) {
-        foreach($this->countries as $country) {
-            if ($country['code'] === $isoCountry) {
-                return $country['name'];
-            }
-        }
-        return null;
+    /**
+     * @return array<Airport>
+     */
+    public function getAirports(): Generator {
+        $this->fetchCountries();
+
+        return $this->fetchOurAirports();
     }
 
     private function fetchOurAirports(): Generator {
-        foreach($this->airports as $airportData) {
-            $airport = $this->transformAirport($airportData);
-            if ($airport->isValid()) {
-                yield $airport;
+        $validator = new OurAirportsValidator();
+
+        $response = $this->httpClient->get('airports.csv');
+        $csv = $response->getBody()->getContents();
+        $lines = explode("\n", $csv);
+
+        for ($i=1; $i < count($lines) - 1; $i++) { 
+            $parts = str_getcsv($lines[$i]);
+
+            $airportData = [
+                'iata_code' => $parts[13],
+                'name' => $parts[3],
+                'iso_country' => $this->getCountryByCode($parts[8]),
+                'municipality' => $parts[10],
+                'latitude_deg' => $parts[4],
+                'longitude_deg' => $parts[5],
+                'scheduled_service' => $parts[11],
+                'type' => $parts[2],
+            ];
+
+            if($validator->validate($airportData)) {
+                yield $this->transformAirport($airportData);
             }
         }
     }
@@ -76,7 +84,7 @@ class OurAirports {
 
         $airport->iata_code = $airportData['iata_code'];
         $airport->airport_name = $airportData['name'];
-        $airport->country_name = $this->getCountryName($airportData['iso_country']);
+        $airport->country_name = $airportData['iso_country'];
         $airport->city_name = $airportData['municipality'];
         $airport->latitude_deg = $airportData['latitude_deg'];
         $airport->longitude_deg = $airportData['longitude_deg'];
@@ -84,11 +92,9 @@ class OurAirports {
     }
 
     public function updateAirports() {
-        foreach($this->fetchOurAirports() as $airport) {
-            Airport::updateOrCreate(
-                ['iata_code' => $airport->iata_code],
-                $airport->toArray()
-            );
+        $airports = $this->getAirports();
+        foreach ($airports as $airport) {
+            $airport->save();
         }
     }
 }

@@ -1,11 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Fahkwang&display=swap');
 
 :root {
-  @apply text-black bg-white;
+  background-color: #3E432F;
+  color: #C9CE8C;
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "Fahkwang", serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+  
+  p {
+    font-family: Arial, Helvetica light, sans-serif;
+  }
 
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Inter, system-ui, Avenir, Helvetica light, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 

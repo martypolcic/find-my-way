@@ -1,0 +1,92 @@
+.jumbotron {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 1em 2em 1em;
+    box-shadow: 0 0.5em 1em rgba(0, 0, 0, 0.25);
+
+    h1 {
+        font-size: 14rem;
+    }
+
+    .jumbotron-content {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: space-evenly;
+        max-width: 90%;
+
+        .jumbotron-img {
+            width: 20em;
+            aspect-ratio: 1/1;
+            border-radius: 1em;
+            background-image: url('./jumbotron-img.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .jumbotron-text {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-evenly;
+            max-width: 60%;
+            gap: 1em;
+            
+
+            h2 {
+                font-size: 1.75rem;
+                max-width: 80%;
+            }
+
+            button {
+                background-color: #C9CE8C;
+                color: #3E432F;
+                border: 1px solid #C9CE8C;
+                padding: 0.5em 1em;
+                font-size: 1.5rem;
+                cursor: pointer;
+                transition: background-color 0.3s ease, border 0.3s ease, color 0.3s ease;
+
+                &:hover {
+                    background-color: #3E432F;
+                    border: 1px solid #C9CE8C;
+                    color: #C9CE8C;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .jumbotron {
+        padding: 0;
+        h1 {
+            font-size: 30vw;
+        }
+
+        .jumbotron-content {
+            max-width: 100%;
+            flex-direction: column;
+            gap: 2em;
+
+            .jumbotron-img {
+                width: 100%;
+                aspect-ratio: 3/1;
+                border-radius: 0;
+            }
+
+            .jumbotron-text {
+                max-width: 100%;
+                gap: 1em;
+
+                h2 {
+                    font-size: 1.5rem;
+                }
+
+                button {
+                    font-size: 1.25rem;
+                }
+            }
+        }
+    }
+}

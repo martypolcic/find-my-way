@@ -1,98 +1,68 @@
-import { useState } from "react";
+import { useState, memo } from "react";
+import "./SearchFlightsForm.css";
+import PickAirportForm from "./PickAirportForm";
 
-interface FieldsState {
-  from: string;
-  date: string;
-  passengers: string;
+export interface FieldsState {
+  from: Airport | null;
+  date: string | null;
+  passengers: number | null;
 }
 
-type FieldValue = FieldsState[keyof FieldsState];
+export type FieldValue = FieldsState[keyof FieldsState];
+
+export interface Airport {
+  id: number;
+  airportName: string;
+  iataCode: string;
+  cityName: string;
+  countryName: string;
+}
+
+const MemoizedPickAirportForm = memo(PickAirportForm);
 
 function SearchFlightsForm() {
+  const [activeStep, setActiveStep] = useState("");
   const [fields, setFields] = useState<FieldsState>({
-    from: "",
-    date: "",
-    passengers: "1",
+    from: null,
+    date: null,
+    passengers: null,
   });
 
-  function onSubmit(event: React.FormEvent) {
-    event.preventDefault();
+  function handleFieldChange(field: keyof FieldsState, value: FieldValue) {
+    setFields((prevFields) => ({
+      ...prevFields,
+      [field]: value,
+    }));
 
     console.log(fields);
-
-    const paramsObj = {
-      departureAirportIataCode: fields.from,  //TODO: transform to IATA code
-      departureDate: fields.date,
-      passengerCount: fields.passengers,
-    }
-    const searchParams = new URLSearchParams(paramsObj);
-
-    fetch(`http://localhost:81/api/v1/search-flights?${searchParams.toString()}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-      });
+    setActiveStep("");
   }
 
-  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const { name } = event.target;
-    let value: FieldValue = event.target.value;
-
-    setFields({
-      ...fields,
-      [name]: value,
-    });
+  function handleStepButtonClick(step: string) {
+    setActiveStep(step);
   }
 
   return (
-    <>
-      <h2>Search Flights</h2>
-      <form onSubmit={onSubmit} className="flex gap-8 max-w-32 p-8">
-        <div>
-          <label htmlFor="from">From</label>
-          <input
-            type="text"
-            id="from"
-            name="from"
-            value={fields.from}
-            onChange={handleChange}
-            required
-          />
-        </div>
+    <div className="search-flights-form">
+      <h1>Your adventure starts here</h1>
+      <p>Let's look for best trip deals</p>
+      <div className="inputs">
+        <button 
+          onClick={() => handleStepButtonClick('Airport')}
+          className={fields.from != null ? 'completed' : ''}
+          >
+          Departure Airport 
+          {fields.from != null && <span>{fields.from.cityName}</span>}
+        </button>
 
-        <div>
-          <label htmlFor="date">Date</label>
-          <input
-            type="date"
-            id="date"
-            name="date"
-            value={fields.date}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div>
-          <label htmlFor="passengers">Passengers</label>
-          <input
-            type="number"
-            id="passengers"
-            name="passengers"
-            value={fields.passengers}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <button type="submit">Submit</button>
-      </form>
-    </>
+        <button onClick={() => handleStepButtonClick('Date')}>Departure Date</button>
+        <button onClick={() => handleStepButtonClick('Participants')}>Number of participants</button>
+      </div>
+      {
+        activeStep === 'Airport' && <MemoizedPickAirportForm onSelect={handleFieldChange}/>
+        //TODO: Add Date and Participants components
+      }
+    </div>
   );
 }
 

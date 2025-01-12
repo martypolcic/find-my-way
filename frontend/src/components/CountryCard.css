@@ -1,0 +1,50 @@
+.country-card {
+    display: flex;
+    flex-direction: column;
+    gap: .5em;
+    border-radius: .5em;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+
+    h2 {
+        font-size: 1.25rem;
+        width: 100%;
+        padding: .5em;
+        text-align: left;
+        border-bottom: 1px solid #C9CE8C;
+    }
+
+    .airport {
+        align-self: center;
+        padding: .5em;
+        border-radius: 5px;
+
+        &:hover {
+            cursor: pointer;
+            color: #3E432F;
+            background-color: #C9CE8C;
+        }
+    }
+
+    .show-more {
+        width: 100%;
+        padding: .5em;
+        margin-top: auto;
+        border-top: 1px solid #C9CE8C;
+        border-radius: 0 0 .5em .5em;
+        cursor: pointer;
+    
+        &:hover {
+            background-color: #C9CE8C;
+            color: #3E432F;
+        }
+    }
+}
+
+
+
+
+
+
+
+
+

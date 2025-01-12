@@ -23,5 +23,6 @@ Route::group(
         Route::apiResource('flight-prices', FlightPriceController::class)->only(['index', 'show']);
         Route::get('search-flights', [SearchFlightsController::class, 'index']);
         Route::get('update-airports', [UpdateAirportsController::class, 'update']);
+        Route::get('search-airports', [AirportController::class, 'search']);
     }
 );

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Models\Airport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\AirportRequest;
+use App\Http\Requests\V1\SearchAirportRequest;
 use App\Http\Resources\V1\AirportCollection;
 use App\Http\Resources\V1\AirportResource;
 
@@ -16,6 +17,16 @@ class AirportController extends Controller
     public function index()
     {
         return new AirportCollection(Airport::all());
+    }
+
+    public function search(SearchAirportRequest $request)
+    {
+        $search = $request->validated('search');
+
+        return new AirportCollection(Airport::where('airport_name', 'like', "%{$search}%")
+            ->orWhere('country_name', 'like', "%{$search}%")
+            ->orWhere('city_name', 'like', "%{$search}%")
+            ->get());
     }
 
     /**

@@ -14,6 +14,9 @@ class FlightPriceController extends Controller
      */
     public function index()
     {
+        if (!auth('api')->user()) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
         return new FlightPriceCollection(FlightPrice::all());
     }
 
@@ -22,6 +25,9 @@ class FlightPriceController extends Controller
      */
     public function show(FlightPrice $flightPrice)
     {
+        if (!auth('api')->user()) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
         return new FlightPriceResource($flightPrice);
     }
 }

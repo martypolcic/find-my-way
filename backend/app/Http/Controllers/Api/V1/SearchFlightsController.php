@@ -13,6 +13,9 @@ class SearchFlightsController extends Controller
 {
     public function index(SearchFlightsRequest $request, RyanairApi $ryanairApi)
     {
+        if (!auth('api')->user()) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
         $validated = $request->validated();
 
         $searchParams = SearchParams::fromArray($validated);

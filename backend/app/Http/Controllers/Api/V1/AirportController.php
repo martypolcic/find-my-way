@@ -16,11 +16,17 @@ class AirportController extends Controller
      */
     public function index()
     {
+        if (!auth('api')->user()) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
         return new AirportCollection(Airport::all());
     }
 
     public function search(SearchAirportRequest $request)
     {
+        if (!auth('api')->user()) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
         $search = $request->validated('search');
 
         return new AirportCollection(Airport::where('airport_name', 'like', "%{$search}%")
@@ -34,6 +40,9 @@ class AirportController extends Controller
      */
     public function show(Airport $airport)
     {
+        if (!auth('api')->user()) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
         return new AirportResource($airport);
     }
     
@@ -42,6 +51,9 @@ class AirportController extends Controller
      */
     public function store(AirportRequest $request)
     {
+        if (!auth('api')->user()) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
         return new AirportResource(Airport::create($request->validated()));
     }
 
@@ -50,6 +62,9 @@ class AirportController extends Controller
      */
     public function update(AirportRequest $request, Airport $airport)
     {
+        if (!auth('api')->user()) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
         $airport->update($request->validated());
         return new AirportResource($airport);
     }
@@ -59,6 +74,9 @@ class AirportController extends Controller
       */
       public function destroy(Airport $airport)
       {
+        if (!auth('api')->user()) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
           $airport->delete();
           return response()->noContent();
       }

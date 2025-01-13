@@ -10,6 +10,9 @@ class UpdateAirportsController extends Controller
 {
     public function update()
     {
+        if (!auth('api')->user()) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
         $airportCount = count(Airport::all());
         $ourAirports = new OurAirports();
         $ourAirports->updateAirports();

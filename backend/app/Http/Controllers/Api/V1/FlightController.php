@@ -14,6 +14,9 @@ class FlightController extends Controller
      */
     public function index()
     {
+        if (!auth('api')->user()) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
         return new FlightCollection(Flight::all());
     }
 
@@ -22,6 +25,9 @@ class FlightController extends Controller
      */
     public function show(Flight $flight)
     {
+        if (!auth('api')->user()) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
         return new FlightResource($flight);
     }
 }

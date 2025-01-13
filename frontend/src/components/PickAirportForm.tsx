@@ -2,6 +2,7 @@ import { useState } from "react";
 import './PickAirportForm.css';
 import { FieldsState, FieldValue, Airport } from "./SearchFlightsForm";
 import CountryCard from "./CountryCard";
+import axios from "axios";
 
 function PickAirportForm({ onSelect }: { onSelect: (field: keyof FieldsState, value: FieldValue) => void }) {
   const [groupedAirports, setGroupedAirports] = useState<Record<string, Airport[]>>({});
@@ -14,9 +15,10 @@ function PickAirportForm({ onSelect }: { onSelect: (field: keyof FieldsState, va
       return;
     }
 
-    const fetchData = async () => {
-      const response = await fetch(`http://localhost:81/api/v1/search-airports?search=${value}`);
-      const json = await response.json();
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`http://localhost:81/api/v1/search-airports?search=${value}`);
+      const json = response.data;
 
       const groups = json.data.reduce((groups: Record<string, Airport[]>, airport: Airport) => {
         const group = airport.countryName;
@@ -28,10 +30,13 @@ function PickAirportForm({ onSelect }: { onSelect: (field: keyof FieldsState, va
       }, {});
 
       setGroupedAirports(groups);
-    };
-
-    fetchData();
+    } catch (error) {
+      // Handle error
+    }
   }
+
+  fetchData(); 
+}
 
   function handleAirportClick(airport: Airport) {
     onSelect('from', airport);

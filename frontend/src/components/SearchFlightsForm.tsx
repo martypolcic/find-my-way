@@ -2,11 +2,12 @@ import { useState, memo } from "react";
 import "./SearchFlightsForm.css";
 import PickAirportForm from "./PickAirportForm";
 import PickDateForm from "./PickDateForm";
+import PickParticipantsForm from "./PickParticipantsForm";
 
 export interface FieldsState {
   from: Airport | null;
   date: string | null;
-  passengers: number | null;
+  passengers: { adults: number; children: number } | null;
 }
 
 export type FieldValue = FieldsState[keyof FieldsState];
@@ -63,14 +64,31 @@ function SearchFlightsForm() {
           Departure Date
           {fields.date != null && <span>{fields.date}</span>}
         </button>
-        <button onClick={() => handleStepButtonClick('Participants')}>Number of participants</button>
+
+        <button 
+          onClick={() => handleStepButtonClick('Participants')}
+          className={fields.passengers != null ? 'completed' : ''}
+        >
+          Number of participants
+          {fields.passengers != null && <span>{fields.passengers.adults} adults, {fields.passengers.children} children</span>}
+        </button>
       </div>
       {
-        activeStep === 'Airport' && <MemoizedPickAirportForm onSelect={handleFieldChange}/>
+        activeStep === 'Airport' && 
+        <MemoizedPickAirportForm 
+          onSelect={handleFieldChange}/>
       }
       {
-        activeStep === 'Date' && <PickDateForm onSelect={handleFieldChange}/>
+        activeStep === 'Date' && 
+        <PickDateForm 
+          onSelect={handleFieldChange}/>
       }
+      {
+        activeStep === 'Participants' && 
+        <PickParticipantsForm 
+          onSelect={handleFieldChange} />
+      }
+      
     </div>
   );
 }

@@ -1,0 +1,80 @@
+.participants-form {
+    margin-top: 2em;
+    background-color: #3E432F;
+    color: #C9CE8C;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+
+    h1 {
+        text-align: center;
+    }
+
+    .form-inputs {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2em;
+            padding: 1em;
+            box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+
+            .controls {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                margin-top: 1em;
+            }
+    
+            label {
+                flex: 1;
+                text-align: left;
+                font-size: 1.25rem;
+            }
+      
+            button {
+                background-color: #C9CE8C;
+                border: none;
+                color: #3E432F;
+                padding: 0.5em 1em;
+                border-radius: 4px;
+                cursor: pointer;
+                
+                &:hover {
+                    background-color: #A7C6DA;
+                }
+            }
+      
+            span {
+                margin: 0 1em;
+                font-size: 1.2rem;
+                min-width: 2em;
+                text-align: center;
+                display: inline-block;
+            }
+        }
+    }
+
+
+    .submit-button {
+        margin-top: 1em;
+        background-color: #3E432F;
+        color: #C9CE8C;
+        border: 1px solid #C9CE8C;
+        padding: 0.5em 1em;
+        cursor: pointer;
+        transition: background-color 0.3s ease, border 0.3s ease, color 0.3s ease;
+
+        &:hover {
+            background-color: #C9CE8C;
+            color: #3E432F;
+        }
+    }
+}

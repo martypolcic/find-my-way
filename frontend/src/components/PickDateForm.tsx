@@ -7,6 +7,7 @@ function PickDateForm({onSelect}: {onSelect: (field: keyof FieldsState, value: F
   const [date, setDate] = useState<any>(new Date());
 
   function handleSubmit() {
+    date.setDate(date.getDate() + 1); //TODO: find out why this is needed, date is off by one day without this
     onSelect('date', date.toISOString().split('T')[0]);
   }
 

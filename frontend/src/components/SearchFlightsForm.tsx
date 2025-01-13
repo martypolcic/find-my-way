@@ -1,6 +1,7 @@
 import { useState, memo } from "react";
 import "./SearchFlightsForm.css";
 import PickAirportForm from "./PickAirportForm";
+import PickDateForm from "./PickDateForm";
 
 export interface FieldsState {
   from: Airport | null;
@@ -50,17 +51,25 @@ function SearchFlightsForm() {
         <button 
           onClick={() => handleStepButtonClick('Airport')}
           className={fields.from != null ? 'completed' : ''}
-          >
+        >
           Departure Airport 
           {fields.from != null && <span>{fields.from.cityName}</span>}
         </button>
 
-        <button onClick={() => handleStepButtonClick('Date')}>Departure Date</button>
+        <button 
+          onClick={() => handleStepButtonClick('Date')}
+          className={fields.date != null ? 'completed' : ''}
+        >
+          Departure Date
+          {fields.date != null && <span>{fields.date}</span>}
+        </button>
         <button onClick={() => handleStepButtonClick('Participants')}>Number of participants</button>
       </div>
       {
         activeStep === 'Airport' && <MemoizedPickAirportForm onSelect={handleFieldChange}/>
-        //TODO: Add Date and Participants components
+      }
+      {
+        activeStep === 'Date' && <PickDateForm onSelect={handleFieldChange}/>
       }
     </div>
   );

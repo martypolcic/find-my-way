@@ -13,7 +13,7 @@ class SearchFlightsController extends Controller
 {
     public function index(SearchFlightsRequest $request, RyanairApi $ryanairApi)
     {
-        if (!auth('api')->user()) {
+        if (!auth('web')->user()) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
         $validated = $request->validated();

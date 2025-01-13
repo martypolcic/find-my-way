@@ -57,3 +57,24 @@
         }
     }
 }
+
+@media screen and (max-width: 768px) {
+    .react-calendar {
+        width: 95%;
+        margin: 0 auto;
+    }
+}
+
+@media screen and (max-width: 425px) {
+    .react-calendar {
+        width: 100%;
+        font-size: 1rem;
+
+        .react-calendar__navigation {
+            button {
+                font-size: 1rem;
+                padding: 0.25em;
+            }
+        }
+    }
+}

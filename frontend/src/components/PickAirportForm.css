@@ -51,3 +51,12 @@
     }
 }
 
+@media (max-width: 425px) {
+    .airport-picker {
+        padding: 0 2%;
+
+        .airport-list {
+            grid-template-columns: 1fr;
+        }
+    }
+}

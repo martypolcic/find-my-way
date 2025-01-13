@@ -57,12 +57,18 @@
     }
 }
 
-@media (max-width: 768px) {
+@media screen and (max-width: 1024px) {
     .jumbotron {
         padding: 0;
         h1 {
-            font-size: 30vw;
+            font-size: 20vw;
         }
+    }
+    
+}
+
+@media (max-width: 768px) {
+    .jumbotron {
 
         .jumbotron-content {
             max-width: 100%;

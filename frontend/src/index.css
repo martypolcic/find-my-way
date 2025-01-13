@@ -17,6 +17,10 @@
     font-family: Arial, Helvetica light, sans-serif;
   }
 
+  body {
+    margin-bottom: 5em;
+  }
+
   font-family: Inter, system-ui, Avenir, Helvetica light, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;

@@ -1,8 +1,9 @@
-import { useState, memo } from "react";
+import { useState } from "react";
 import "./SearchFlightsForm.css";
 import PickAirportForm from "./PickAirportForm";
 import PickDateForm from "./PickDateForm";
 import PickParticipantsForm from "./PickParticipantsForm";
+import SearchResults from "./SearchResults";
 
 export interface FieldsState {
   from: Airport | null;
@@ -20,8 +21,6 @@ export interface Airport {
   countryName: string;
 }
 
-const MemoizedPickAirportForm = memo(PickAirportForm);
-
 function SearchFlightsForm() {
   const [activeStep, setActiveStep] = useState("");
   const [fields, setFields] = useState<FieldsState>({
@@ -36,7 +35,6 @@ function SearchFlightsForm() {
       [field]: value,
     }));
 
-    console.log(fields);
     setActiveStep("");
   }
 
@@ -75,7 +73,7 @@ function SearchFlightsForm() {
       </div>
       {
         activeStep === 'Airport' && 
-        <MemoizedPickAirportForm 
+        <PickAirportForm 
           onSelect={handleFieldChange}/>
       }
       {
@@ -87,6 +85,14 @@ function SearchFlightsForm() {
         activeStep === 'Participants' && 
         <PickParticipantsForm 
           onSelect={handleFieldChange} />
+      }
+
+      {
+        fields.from != null && fields.date != null && fields.passengers != null && 
+        <SearchResults 
+          from={fields.from} 
+          date={fields.date} 
+          passengers={fields.passengers} />
       }
       
     </div>

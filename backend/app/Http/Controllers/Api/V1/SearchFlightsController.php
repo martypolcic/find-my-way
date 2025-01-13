@@ -7,7 +7,7 @@ use App\Http\Requests\V1\SearchFlightsRequest;
 use App\Http\Resources\V1\FlightCollection;
 use App\Integrations\Params\SearchParams;
 use App\Integrations\Ryanair\RyanairApi;
-use DateTimeImmutable;
+use App\Models\Flight;
 
 class SearchFlightsController extends Controller
 {
@@ -16,7 +16,23 @@ class SearchFlightsController extends Controller
         $validated = $request->validated();
 
         $searchParams = SearchParams::fromArray($validated);
-        
-        return new FlightCollection($ryanairApi->searchFlights($searchParams));
+        $flights = $ryanairApi->searchFlights($searchParams);
+
+        foreach($flights as $flight) {
+            if (Flight::where('flight_key', $flight->flight_key)->exists()) {
+                continue;
+            }
+
+            // extract flight price from flight object
+            $flightPrice = $flight->flightPrices;
+            unset($flight->flightPrices);
+            
+            $flight->save();
+
+            $flightPrice->flight_id = $flight->id;
+            $flightPrice->save();
+        }
+
+        return new FlightCollection(Flight::all());
     }
 }

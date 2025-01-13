@@ -18,8 +18,10 @@ class AirportResource extends JsonResource
             'id' => $this->id,
             'iataCode' => $this->iata_code,
             'airportName' => $this->airport_name,
-            'cityName' => $this->city_name,
             'countryName' => $this->country_name,
+            'cityName' => $this->city_name,
+            'latitudeDeg' => $this->latitude_deg,
+            'longitudeDeg' => $this->longitude_deg,
         ];
     }
 }

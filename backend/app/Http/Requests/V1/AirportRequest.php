@@ -34,15 +34,20 @@ class AirportRequest extends FormRequest
                 'string',
                 'max:255',
             ],
-            'city_name' => [
-                $sometimesRequired,
-                'string',
-                'max:255',
-            ],
             'country_name' => [
                 $sometimesRequired,
                 'string',
                 'max:255',
+            ],
+            'latitude_deg' => [
+                $sometimesRequired,
+                'decimal:0,8',
+                'between:-90,90',
+            ],
+            'longitude_deg' => [
+                $sometimesRequired,
+                'decimal:0,8',
+                'between:-180,180',
             ],
         ];
     }

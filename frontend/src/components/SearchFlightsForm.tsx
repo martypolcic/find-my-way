@@ -3,7 +3,7 @@ import { useState } from "react";
 interface FieldsState {
   from: string;
   date: string;
-  passengers: number;
+  passengers: string;
 }
 
 type FieldValue = FieldsState[keyof FieldsState];
@@ -12,20 +12,37 @@ function SearchFlightsForm() {
   const [fields, setFields] = useState<FieldsState>({
     from: "",
     date: "",
-    passengers: 1,
+    passengers: "1",
   });
 
   function onSubmit(event: React.FormEvent) {
     event.preventDefault();
+
+    console.log(fields);
+
+    const paramsObj = {
+      departureAirportIataCode: fields.from,  //TODO: transform to IATA code
+      departureDate: fields.date,
+      passengerCount: fields.passengers,
+    }
+    const searchParams = new URLSearchParams(paramsObj);
+
+    fetch(`http://localhost:81/api/v1/search-flights?${searchParams.toString()}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+      });
   }
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { name } = event.target;
     let value: FieldValue = event.target.value;
-
-    if (name === "passengers") {
-      value = Number.parseInt(value);
-    }
 
     setFields({
       ...fields,
@@ -45,6 +62,7 @@ function SearchFlightsForm() {
             name="from"
             value={fields.from}
             onChange={handleChange}
+            required
           />
         </div>
 
@@ -56,6 +74,7 @@ function SearchFlightsForm() {
             name="date"
             value={fields.date}
             onChange={handleChange}
+            required
           />
         </div>
 
@@ -67,6 +86,7 @@ function SearchFlightsForm() {
             name="passengers"
             value={fields.passengers}
             onChange={handleChange}
+            required
           />
         </div>
 

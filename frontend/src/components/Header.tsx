@@ -8,7 +8,6 @@ function Header({ onChangeTab }: HeaderProps) {
   return (
     <header>
         <button onClick={() => onChangeTab('searchFlights')}>Home</button>
-        <button onClick={() => onChangeTab('airports')}>Airports</button>
     </header>
   );
 }

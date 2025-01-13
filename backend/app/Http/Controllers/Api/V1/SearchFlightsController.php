@@ -7,6 +7,7 @@ use App\Http\Requests\V1\SearchFlightsRequest;
 use App\Http\Resources\V1\FlightCollection;
 use App\Integrations\Params\SearchParams;
 use App\Integrations\Ryanair\RyanairApi;
+use DateTimeImmutable;
 
 class SearchFlightsController extends Controller
 {

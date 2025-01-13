@@ -29,6 +29,11 @@ class AirportRequest extends FormRequest
                 'max:3',
                 'uppercase',
             ],
+            'city_name' => [
+                $sometimesRequired,
+                'string',
+                'max:255',
+            ],
             'airport_name' => [
                 $sometimesRequired,
                 'string',

@@ -21,7 +21,7 @@ Route::group(
     ],
     function () {
         Route::apiResource('airports', AirportController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
-        Route::apiResource('flights', FlightController::class)->only(['index', 'show']);
+        Route::apiResource('flights', FlightController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
         Route::apiResource('flight-prices', FlightPriceController::class)->only(['index', 'show']);
         Route::get('search-flights', [SearchFlightsController::class, 'index']);
         Route::get('update-airports', [UpdateAirportsController::class, 'update']);

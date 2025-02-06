@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import './AdminManagement.css';
+import './AirportManagement.css';
 
-interface Airport {
+export interface Airport {
   id: number;
   iataCode: string;
   airportName: string;
@@ -12,7 +12,7 @@ interface Airport {
   longitudeDeg: string;
 }
 
-function AdminManagement() {
+function AirportManagement() {
   const [airports, setAirports] = useState<Airport[] | null>(null);
   const [editingAirportId, setEditingAirportId] = useState<number | null>(null);
   const [editedAirport, setEditedAirport] = useState<Airport | null>(null);
@@ -123,7 +123,7 @@ function AdminManagement() {
   }
 
   return (
-    <div className="admin-management">
+    <div className="airport-management">
       <h1>Manage Airports</h1>
       <table>
         <thead>
@@ -309,4 +309,4 @@ function AdminManagement() {
   );
 }
 
-export default AdminManagement;
+export default AirportManagement;

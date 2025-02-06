@@ -4,7 +4,7 @@ import Header from './components/Header'
 import SearchFlightsForm from './components/SearchFlightsForm'
 import Jumbotron from './components/Jumbotron';
 import AuthForm from './components/AuthForm';
-import AdminManagement from './components/AdminManagement';
+import AdminDashboard from './components/AdminDashboard';
 
 function App() {
   const [activeTab, setActiveTab] = useState('searchFlights');
@@ -26,13 +26,14 @@ function App() {
 
   function handleLogout() {
     setIsLogged(false);
+    setActiveTab('searchFlights');
   }
 
   function renderComponents() {
     if (activeTab === 'auth') {
       return <AuthForm onLogin={handleLogin} />;
     } else if (activeTab === 'management') {
-      return <AdminManagement />;
+      return <AdminDashboard />;
     }
 
 

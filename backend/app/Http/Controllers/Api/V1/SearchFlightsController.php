@@ -13,9 +13,6 @@ class SearchFlightsController extends Controller
 {
     public function index(SearchFlightsRequest $request, RyanairApi $ryanairApi)
     {
-        if (!auth('web')->user()) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
         $validated = $request->validated();
 
         $searchParams = SearchParams::fromArray($validated);
@@ -36,6 +33,6 @@ class SearchFlightsController extends Controller
             $flightPrice->save();
         }
 
-        return new FlightCollection(Flight::all());
+        return new FlightCollection($flights);
     }
 }

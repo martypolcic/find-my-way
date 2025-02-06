@@ -20,8 +20,6 @@ class FlightResource extends JsonResource
             'flightKey' => $this->flight_key,
             'departureDate' => $this->departure_date,
             'arrivalDate' => $this->arrival_date,
-            'departureAirportId' => $this->departure_airport_id,
-            'arrivalAirportId' => $this->arrival_airport_id,
             'departureAirport' => $this->departureAirport,
             'arrivalAirport' => $this->arrivalAirport,
             'flightPrices' => $this->flightPrices,

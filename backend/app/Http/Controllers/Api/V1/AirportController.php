@@ -24,9 +24,6 @@ class AirportController extends Controller
 
     public function search(SearchAirportRequest $request)
     {
-        if (!auth('web')->user()) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
         $search = $request->validated('search');
 
         return new AirportCollection(Airport::where('airport_name', 'like', "%{$search}%")

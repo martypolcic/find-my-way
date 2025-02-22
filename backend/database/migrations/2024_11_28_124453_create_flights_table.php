@@ -19,6 +19,7 @@ return new class extends Migration
             $table->dateTime('arrival_date');
             $table->foreignId('departure_airport_id')->constrained('airports')->cascadeOnDelete();
             $table->foreignId('arrival_airport_id')->constrained('airports')->cascadeOnDelete();
+            $table->foreignId('airline_id')->constrained('airlines')->cascadeOnDelete();
             $table->timestamps();
         });
     }

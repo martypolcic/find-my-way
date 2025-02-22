@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('airport_name');
             $table->string('city_name');
             $table->string('country_name');
+            $table->decimal('latitude_deg', 10, 8);
+            $table->decimal('longitude_deg', 11, 8);
             $table->timestamps();
         });
     }

@@ -15,6 +15,8 @@ class Airport extends Model
         'airport_name',
         'city_name',
         'country_name',
+        'latitude_deg',
+        'longitude_deg',
     ];
 
     function flights() {

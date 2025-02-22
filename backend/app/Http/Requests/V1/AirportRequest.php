@@ -29,12 +29,12 @@ class AirportRequest extends FormRequest
                 'max:3',
                 'uppercase',
             ],
-            'city_name' => [
+            'airport_name' => [
                 $sometimesRequired,
                 'string',
                 'max:255',
             ],
-            'airport_name' => [
+            'city_name' => [
                 $sometimesRequired,
                 'string',
                 'max:255',
@@ -43,16 +43,6 @@ class AirportRequest extends FormRequest
                 $sometimesRequired,
                 'string',
                 'max:255',
-            ],
-            'latitude_deg' => [
-                $sometimesRequired,
-                'decimal:0,8',
-                'between:-90,90',
-            ],
-            'longitude_deg' => [
-                $sometimesRequired,
-                'decimal:0,8',
-                'between:-180,180',
             ],
         ];
     }

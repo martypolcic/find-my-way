@@ -1,101 +1,98 @@
 import { useState } from "react";
-import "./SearchFlightsForm.css";
-import PickAirportForm from "./PickAirportForm";
-import PickDateForm from "./PickDateForm";
-import PickParticipantsForm from "./PickParticipantsForm";
-import SearchResults from "./SearchResults";
 
-export interface FieldsState {
-  from: Airport | null;
-  date: string | null;
-  passengers: { adults: number; children: number } | null;
+interface FieldsState {
+  from: string;
+  date: string;
+  passengers: string;
 }
 
-export type FieldValue = FieldsState[keyof FieldsState];
-
-export interface Airport {
-  id: number;
-  airportName: string;
-  iataCode: string;
-  cityName: string;
-  countryName: string;
-}
+type FieldValue = FieldsState[keyof FieldsState];
 
 function SearchFlightsForm() {
-  const [activeStep, setActiveStep] = useState("");
   const [fields, setFields] = useState<FieldsState>({
-    from: null,
-    date: null,
-    passengers: null,
+    from: "",
+    date: "",
+    passengers: "1",
   });
 
-  function handleFieldChange(field: keyof FieldsState, value: FieldValue) {
-    setFields((prevFields) => ({
-      ...prevFields,
-      [field]: value,
-    }));
+  function onSubmit(event: React.FormEvent) {
+    event.preventDefault();
 
-    setActiveStep("");
+    console.log(fields);
+
+    const paramsObj = {
+      departureAirportIataCode: fields.from,  //TODO: transform to IATA code
+      departureDate: fields.date,
+      passengerCount: fields.passengers,
+    }
+    const searchParams = new URLSearchParams(paramsObj);
+
+    fetch(`http://localhost:81/api/v1/search-flights?${searchParams.toString()}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+      });
   }
 
-  function handleStepButtonClick(step: string) {
-    setActiveStep(step);
+  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const { name } = event.target;
+    let value: FieldValue = event.target.value;
+
+    setFields({
+      ...fields,
+      [name]: value,
+    });
   }
 
   return (
-    <div className="search-flights-form">
-      <h1>Your adventure starts here</h1>
-      <p>Let's look for best trip deals</p>
-      <div className="inputs">
-        <button 
-          onClick={() => handleStepButtonClick('Airport')}
-          className={fields.from != null ? 'completed' : ''}
-        >
-          Departure Airport 
-          {fields.from != null && <span>{fields.from.cityName}</span>}
-        </button>
+    <>
+      <h2>Search Flights</h2>
+      <form onSubmit={onSubmit} className="flex gap-8 max-w-32 p-8">
+        <div>
+          <label htmlFor="from">From</label>
+          <input
+            type="text"
+            id="from"
+            name="from"
+            value={fields.from}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
-        <button 
-          onClick={() => handleStepButtonClick('Date')}
-          className={fields.date != null ? 'completed' : ''}
-        >
-          Departure Date
-          {fields.date != null && <span>{fields.date}</span>}
-        </button>
+        <div>
+          <label htmlFor="date">Date</label>
+          <input
+            type="date"
+            id="date"
+            name="date"
+            value={fields.date}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
-        <button 
-          onClick={() => handleStepButtonClick('Participants')}
-          className={fields.passengers != null ? 'completed' : ''}
-        >
-          Number of participants
-          {fields.passengers != null && <span>{fields.passengers.adults} adults, {fields.passengers.children} children</span>}
-        </button>
-      </div>
-      {
-        activeStep === 'Airport' && 
-        <PickAirportForm 
-          onSelect={handleFieldChange}/>
-      }
-      {
-        activeStep === 'Date' && 
-        <PickDateForm 
-          onSelect={handleFieldChange}/>
-      }
-      {
-        activeStep === 'Participants' && 
-        <PickParticipantsForm 
-          onSelect={handleFieldChange} />
-      }
+        <div>
+          <label htmlFor="passengers">Passengers</label>
+          <input
+            type="number"
+            id="passengers"
+            name="passengers"
+            value={fields.passengers}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
-      {
-        fields.from != null && fields.date != null && fields.passengers != null && 
-        <SearchResults 
-          from={fields.from} 
-          date={fields.date} 
-          passengers={fields.passengers} />
-      }
-      
-    </div>
+        <button type="submit">Submit</button>
+      </form>
+    </>
   );
 }
 

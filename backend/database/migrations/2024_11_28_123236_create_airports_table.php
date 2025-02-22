@@ -15,10 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('iata_code');
             $table->string('airport_name');
-            $table->string('country_name');
             $table->string('city_name');
-            $table->decimal('latitude_deg', 10, 8);
-            $table->decimal('longitude_deg', 11, 8);
+            $table->string('country_name');
             $table->timestamps();
         });
     }

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreignId('departure_airport_id')->constrained('airports')->cascadeOnDelete();
             $table->foreignId('arrival_airport_id')->constrained('airports')->cascadeOnDelete();
             $table->foreignId('airline_id')->nullable()->constrained('airlines')->cascadeOnDelete();
+            $table->string('provider_id')->constrained('providers')->cascadeOnDelete();
             $table->timestamps();
         });
     }

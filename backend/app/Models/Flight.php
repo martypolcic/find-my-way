@@ -18,6 +18,12 @@ class Flight extends Model
         'departure_airport_id',
         'arrival_airport_id',
         'airline_id',
+        'provider_id',
+    ];
+
+    protected $casts = [
+        'departure_date' => 'datetime',
+        'arrival_date' => 'datetime',
     ];
 
     function departureAirport() {
@@ -32,7 +38,15 @@ class Flight extends Model
         return $this->belongsTo(Airline::class, 'airline_id');
     }
 
+    function provider() {
+        return $this->belongsTo(Provider::class, 'provider_id');
+    }
+
     function flightPrices() {
         return $this->hasMany(FlightPrice::class);
+    }
+
+    function latestPrice() {
+        return $this->flightPrices()->latest()->first();
     }
 }

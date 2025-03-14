@@ -13,4 +13,17 @@ class AirportService
         $ourAirportsApi = new OurAirportsApi();
         $ourAirportsApi->processAirports();
     }
+    
+    public static function getAirportIdByIata(string $iataCode): int
+    {
+        $airport = Airport::where('iata_code', $iataCode)->first();
+        if ($airport && !$airport->active) {
+            $airport->active = true;
+            $airport->save();
+        }
+
+        return Cache::remember("airport_id_{$iataCode}", 3600, function () use ($iataCode) {
+            return Airport::where('iata_code', $iataCode)->firstOrFail()->id;
+        });
+    }
 }

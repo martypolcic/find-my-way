@@ -12,11 +12,13 @@ class Airport extends Model
 
     protected $fillable = [
         'iata_code',
-        'airport_name',
-        'city_name',
-        'country_name',
-        'latitude_deg',
-        'longitude_deg',
+        'icao_code',
+        'name',
+        'city',
+        'country',
+        'latitude',
+        'longitude',
+        'active',
     ];
 
     function flights() {

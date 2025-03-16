@@ -1,0 +1,92 @@
+.styled-button {
+    padding: 12px;
+    background: white;
+    border: 1px solid #1B3022;
+    border-radius: 8px;
+    text-align: left;
+    font-size: 16px;
+    cursor: pointer;
+
+    &:focus {
+        outline: none;
+    }
+}
+
+.floating-label {
+    position: absolute;
+    top: 4px;
+    left: 0;
+    padding: 0 1em;
+    background: none;
+    color: #304336;
+    font-size: .75rem;
+    transition: 0.2s;
+}
+
+.dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    z-index: 10;
+    min-height: 10em;
+    min-width: 12.5em;
+
+    .message {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        min-width: 12.5em;
+        height: 10em;
+        padding: 1em;
+    }
+
+    .dropdown-item {
+        padding: 1em;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        text-align: center;
+
+        .item-controls {
+            display: flex;
+            align-items: center;
+            gap: .5em;
+
+            .control-label {
+                min-width: 1em;
+            }
+
+            .control-button {
+                padding: .5em .75em;
+                border-radius: .5em;
+                background: #00916E;
+                color: white;
+                border: none;
+                font-size: 16px;
+                cursor: pointer;
+
+                &:hover {
+                    background: #007A63;
+                }
+            }
+        }
+    }
+}
+
+.submit-button {
+    padding: 12px;
+    background: #1B3022;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.filled {
+    padding: 20px 12px 4px 12px; 
+}

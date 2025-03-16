@@ -1,0 +1,17 @@
+.search-result {
+    width: 100%;
+    padding: 5px 20px;
+
+    h1 {
+        font-weight: bold;
+    }
+
+    h2 {
+        color: #304336;
+        font-size: .8rem;
+    }
+
+    &:hover {
+        background-color: #f5f5f5;
+    }
+}

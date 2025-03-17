@@ -7,7 +7,7 @@ services:
         env_file:
             - ./backend/.env
         ports:
-            - '81:80'
+            - '8001:80'
         volumes:
             - './backend:/app'
     frontend-app:
@@ -28,7 +28,7 @@ services:
             MARIADB_PASSWORD: 'laravel'
             MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 'yes'
         ports: 
-            - '3306:3306'
+            - '9000:3306'
         volumes:
             - ./backend/db:/var/lib/mysql:Z
         healthcheck:
@@ -39,31 +39,67 @@ services:
                 - '--innodb_initialized'
             retries: 3
             timeout: 5s
-
-    # fake-flights-api-1:
-    #     build:
-    #         context: './fake-flights-api'
-    #         dockerfile: Dockerfile
-    #     image: 'fake-flights-api'
-    #     env_file:
-    #         - ./fake-flights-api/.env.first
-    #     extra_hosts:
-    #         - 'host.docker.internal:host-gateway'
-    #     ports:
-    #         - '${APP_PORT:-80}:80'
-    #     volumes:
-    #         - './fake-flights-api:/app'
-
-    # fake-flights-api-2:
-    #     build:
-    #         context: './fake-flights-api'
-    #         dockerfile: Dockerfile
-    #     image: 'fake-flights-api'
-    #     env_file:
-    #         - ./fake-flights-api/.env.second
-    #     extra_hosts:
-    #         - 'host.docker.internal:host-gateway'
-    #     ports:
-    #         - '${APP_PORT:-80}:80'
-    #     volumes:
-    #         - './fake-flights-api:/app'
+    fake-flights-api-1:
+        build:
+            context: './fake-flights-api'
+            dockerfile: Dockerfile
+        image: 'fake-flights-api'
+        env_file:
+            - ./fake-flights-api/.env.first
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
+        ports:
+            - '8002:80'
+        volumes:
+            - './fake-flights-api:/app'
+    fake-flights-api-1-db:
+        image: 'mariadb:11'
+        environment:
+            MARIADB_DATABASE: 'laravel'
+            MARIADB_USER: 'laravel'
+            MARIADB_PASSWORD: 'laravel'
+            MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 'yes'
+        ports: 
+            - '9001:3306'
+        volumes:
+            - ./fake-flights-api/db:/var/lib/mysql:Z
+        healthcheck:
+            test:
+                - CMD
+                - healthcheck.sh
+                - '--connect'
+                - '--innodb_initialized'
+            retries: 3
+            timeout: 5s
+    fake-flights-api-2:
+        build:
+            context: './fake-flights-api'
+            dockerfile: Dockerfile
+        image: 'fake-flights-api'
+        env_file:
+            - ./fake-flights-api/.env.second
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
+        ports:
+            - '8003:80'
+        volumes:
+            - './fake-flights-api:/app'
+    fake-flights-api-2-db:
+        image: 'mariadb:11'
+        environment:
+            MARIADB_DATABASE: 'laravel'
+            MARIADB_USER: 'laravel'
+            MARIADB_PASSWORD: 'laravel'
+            MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 'yes'
+        ports:
+            - '9002:3306'
+        volumes:
+            - ./fake-flights-api/db2:/var/lib/mysql:Z
+        healthcheck:
+            test:
+                - CMD
+                - healthcheck.sh
+                - '--connect'
+                - '--innodb_initialized'
+            retries: 3
+            timeout: 5s

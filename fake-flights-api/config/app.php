@@ -13,7 +13,20 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'xxx'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Fake Flights API Version
+    |--------------------------------------------------------------------------
+    |
+    | This value is the version of the Fake Flights API that will be used when
+    | the application needs to place the API version in a response or other
+    | UI elements where an API version needs to be displayed.
+    |
+    */
+    
+    'fake_flights_api_version' => env('FAKE_FLIGHTS_API_VERSION', 'ALPHA'),
 
     /*
     |--------------------------------------------------------------------------

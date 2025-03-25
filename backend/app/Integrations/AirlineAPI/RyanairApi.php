@@ -2,15 +2,16 @@
 
 namespace App\Integrations\AirlineAPI;
 
-use App\Integrations\Api;
+use App\Integrations\FlightsApi;
 use App\Integrations\Params\SearchParams;
 use App\Models\Provider;
+use App\Services\AirlineService;
 use App\Services\AirportService;
 use App\Services\FlightService;
 use App\Services\FlightPriceService;
 use GuzzleHttp\Client as HttpClient;
 
-class RyanairApi implements Api {
+class RyanairApi implements FlightsApi {
     private readonly HttpClient $httpClient;
 
     public function __construct() 
@@ -55,7 +56,7 @@ class RyanairApi implements Api {
         if (!$response || empty($response['fares'])) return;
 
         $departureAirportId = AirportService::getAirportIdByIata($searchParams->getDepartureAirportIataCode());
-        $airlineId = null; //TODO: Implement
+        $airlineId = AirlineService::getAirlineIdByIata('FR');
         $providerId = Provider::where('name', self::getProvider())->first()->id;
 
         foreach ($response['fares'] as $fare) {

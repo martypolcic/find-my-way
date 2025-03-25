@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Integrations\Params\SearchParams;
-use App\Integrations\Api;
+use App\Integrations\FlightsApi;
 use ReflectionClass;
 use App\Models\Provider;
 
@@ -26,7 +26,7 @@ class ApiService
             if (class_exists($fullClassName)) {
                 $reflection = new ReflectionClass($fullClassName);
 
-                if ($reflection->implementsInterface(Api::class)) {
+                if ($reflection->implementsInterface(FlightsApi::class)) {
                     $this->apis[] = app($fullClassName);
                 }
             }

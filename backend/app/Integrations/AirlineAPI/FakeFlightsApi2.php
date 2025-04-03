@@ -3,7 +3,7 @@
 namespace App\Integrations\AirlineAPI;
 
 use App\Integrations\FlightsApi;
-use App\Integrations\Params\SearchParams;
+use App\Integrations\Params\FlightsSearchParams;
 use App\Models\Provider;
 use App\Services\AirportService;
 use App\Services\FlightService;
@@ -25,7 +25,7 @@ class FakeFlightsApi2 implements FlightsApi {
         return 'FakeFlightsApi2';
     }
 
-    private function fetchDestinations(SearchParams $searchParams)
+    private function fetchDestinations(FlightsSearchParams $searchParams)
     {
         $departureDate = $searchParams->getDepartureDate()->format('Y-m-d');
 
@@ -35,7 +35,7 @@ class FakeFlightsApi2 implements FlightsApi {
                     'departureAirportIataCode' => $searchParams->getDepartureAirportIataCode(),
                     'departureDate' => $departureDate,
                     'outboundDepartureDateTo' => $departureDate,
-                    'passengerCount' => $searchParams->getPassengerCount(),
+                    'passengerCount' => $searchParams->getAdultCount(),
                 ],
             ]);
             return json_decode($response->getBody()->getContents(), true);
@@ -45,7 +45,7 @@ class FakeFlightsApi2 implements FlightsApi {
         }
     }
 
-    public function searchFlights(SearchParams $search_params)
+    public function searchFlights(FlightsSearchParams $search_params)
     {
         $response = $this->fetchDestinations($search_params);
         if (!$response || empty($response['data'])) return;

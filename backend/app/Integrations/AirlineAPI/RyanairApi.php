@@ -3,7 +3,7 @@
 namespace App\Integrations\AirlineAPI;
 
 use App\Integrations\FlightsApi;
-use App\Integrations\Params\SearchParams;
+use App\Integrations\Params\FlightsSearchParams;
 use App\Models\Provider;
 use App\Services\AirlineService;
 use App\Services\AirportService;
@@ -26,7 +26,7 @@ class RyanairApi implements FlightsApi {
         return 'Ryanair';
     }
 
-    private function fetchDestinations(SearchParams $searchParams)
+    private function fetchDestinations(FlightsSearchParams $searchParams)
     {
         $departureDate = $searchParams->getDepartureDate()->format('Y-m-d');
 
@@ -37,7 +37,9 @@ class RyanairApi implements FlightsApi {
                     'outboundDepartureDateFrom' => $departureDate,
                     'outboundDepartureDateTo' => $departureDate,
                     'market' => 'en-gb',
-                    'adultPaxCount' => $searchParams->getPassengerCount(),
+                    'adults' => $searchParams->getAdultCount(),
+                    'children' => $searchParams->getChildCount(),
+                    'infants' => $searchParams->getInfantCount(),
                     'outboundDepartureTimeFrom' => '00:00',
                     'outboundDepartureTimeTo' => '23:59',
                 ],
@@ -50,7 +52,7 @@ class RyanairApi implements FlightsApi {
         }
     }
 
-    public function searchFlights(SearchParams $searchParams)
+    public function searchFlights(FlightsSearchParams $searchParams)
     {
         $response = $this->fetchDestinations($searchParams);
         if (!$response || empty($response['fares'])) return;

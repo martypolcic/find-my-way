@@ -4,7 +4,7 @@ namespace App\Integrations\AirlineAPI;
 
 use App\Integrations\FlightsApi;
 use App\Integrations\AmadeusBaseApi;
-use App\Integrations\Params\SearchParams;
+use App\Integrations\Params\FlightsSearchParams;
 use App\Services\AirportService;
 use App\Models\Airline;
 use App\Models\Provider;
@@ -14,7 +14,7 @@ use App\Services\FlightPriceService;
 
 class AmadeusApi extends AmadeusBaseApi implements FlightsApi {
 
-    public function searchFlights(SearchParams $searchParams)
+    public function searchFlights(FlightsSearchParams $searchParams)
     {
         $departureDate = $searchParams->getDepartureDate()->format('Y-m-d');
 

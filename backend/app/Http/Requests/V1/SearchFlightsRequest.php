@@ -22,9 +22,13 @@ class SearchFlightsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'departureAirportIataCode' => ['required', 'string', 'size:3',], // TODO: 'exists:airports,iata_code'],
+            'departureAirportIataCode' => ['required', 'string', 'size:3',],
+            'destinationAirportIataCode' => ['string', 'size:3'],
             'departureDate' => ['required', 'date'],
-            'passengerCount' => ['required', 'integer', 'min:1'],
+            'returnDate' => ['date'],
+            'adultCount' => ['required', 'integer', 'min:1'],
+            'childCount' => ['required', 'integer', 'min:0'],
+            'infantCount' => ['required', 'integer', 'min:0'],
         ];
     }
 }

@@ -3,17 +3,19 @@
 namespace App\Services;
 
 use App\Integrations\Params\SearchParams;
+use App\Integrations\Params\FlightsSearchParams;
+use App\Integrations\Params\TripsSearchParams;
 use App\Integrations\FlightsApi;
 use ReflectionClass;
 use App\Models\Provider;
 
 class ApiService
 {
-    private array $apis = [];
+    private array $flightApis = [];
 
     public function __construct()
     {
-        $this->loadActiveApis();
+        $this->loadActiveFlightApis();
     }
 
     private function loadActiveApis()
@@ -27,15 +29,15 @@ class ApiService
                 $reflection = new ReflectionClass($fullClassName);
 
                 if ($reflection->implementsInterface(FlightsApi::class)) {
-                    $this->apis[] = app($fullClassName);
+                    $this->flightApis[] = app($fullClassName);
                 }
             }
         }
     }
 
-    public function searchFlights(SearchParams $searchParams)
+    public function searchFlights(FlightsSearchParams $searchParams)
     {
-        foreach ($this->apis as $api) {
+        foreach ($this->flightApis as $api) {
             $api->searchFlights($searchParams);
         }
     }

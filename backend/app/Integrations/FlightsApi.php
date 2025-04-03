@@ -2,9 +2,9 @@
 
 namespace App\Integrations;
 
-use App\Integrations\Params\SearchParams;
+use App\Integrations\Params\FlightsSearchParams;
 
 interface FlightsApi {
-    public function searchFlights(SearchParams $searchParams);
+    public function searchFlights(FlightsSearchParams $searchParams);
     public static function getProvider(): string;
 }

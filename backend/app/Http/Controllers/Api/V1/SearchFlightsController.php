@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\SearchFlightsRequest;
 use App\Http\Resources\V1\FlightCollection;
-use App\Integrations\Params\SearchParams;
+use App\Integrations\Params\FlightsSearchParams;
 use App\Services\ApiService;
 use App\Services\AirportService;
 use App\Models\Flight;
@@ -15,7 +15,7 @@ class SearchFlightsController extends Controller
     public function index(SearchFlightsRequest $request)
     {
         $validated = $request->validated();
-        $searchParams = SearchParams::fromArray($validated);
+        $searchParams = FlightsSearchParams::fromArray($validated);
 
         $apiService = new ApiService();
         $apiService->searchFlights($searchParams);

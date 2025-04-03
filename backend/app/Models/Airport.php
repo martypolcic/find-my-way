@@ -32,4 +32,8 @@ class Airport extends Model
     function arrivalFlights() {
         return $this->hasMany(Flight::class, 'arrival_airport_id');
     }
+
+    function accomodations() {
+        return $this->hasMany(Accomodation::class);
+    }
 }

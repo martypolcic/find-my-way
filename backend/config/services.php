@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'tripadvisor' => [
+        'api_key' => env('APP_TRIPADVISOR_API_KEY'),
+    ],
+
 ];

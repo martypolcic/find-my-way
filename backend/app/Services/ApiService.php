@@ -70,5 +70,65 @@ class ApiService
             }
         }
     }
+
+    public function searchTrips(TripsSearchParams $tripSearchParams)
+    {
+        $departureAirport = AirportService::getAirportByIata($tripSearchParams->getDepartureAirportIataCode());
+        if (!$departureAirport) {
+            //TODO: LOG and throw error response
+            throw new \Exception("Departure airport not found");
+        }
+
+        $departureFlightsParams = FlightsSearchParams::fromArray([
+            'departureAirportIataCode' => $departureAirport->iata_code,
+            'destinationAirportIataCode' => null,
+            'departureDate' => $tripSearchParams->getDepartureDate()->format('Y-m-d'),
+            'adultCount' => $tripSearchParams->getAdultCount(),
+            'childCount' => $tripSearchParams->getChildCount(),
+            'infantCount' => $tripSearchParams->getInfantCount(),
+        ]);
+
+        foreach ($this->flightApis as $api) {
+            $api->searchFlights($departureFlightsParams);
+        }
+
+        $destinationAirportIds = FlightService::getDestinationIds(
+            $departureAirport->id,
+            $tripSearchParams->getDepartureDate()->format('Y-m-d')
+        );
+        
+        foreach ($destinationAirportIds as $destinationAirportId) {
+            $destinationAirport = AirportService::getAirportById($destinationAirportId);
+
+            $returnFlightsParams = FlightsSearchParams::fromArray([
+                'departureAirportIataCode' => $destinationAirport->iata_code,
+                'destinationAirportIataCode' => $departureAirport->iata_code,
+                'departureDate' => $tripSearchParams->getReturnDate()->format('Y-m-d'),
+                'adultCount' => $tripSearchParams->getAdultCount(),
+                'childCount' => $tripSearchParams->getChildCount(),
+                'infantCount' => $tripSearchParams->getInfantCount(),
+            ]);
+
+            foreach ($this->flightApis as $api) {
+                $api->searchFlights($returnFlightsParams);
+            }
+
+            $accomodationParams = AccomodationsSearchParams::fromArray([
+                'airportIataCode' => $destinationAirport->iata_code,
+                'checkInDate' => $tripSearchParams->getDepartureDate()->format('Y-m-d'),
+                'checkOutDate' => $tripSearchParams->getReturnDate()->format('Y-m-d'),
+                'adultCount' => $tripSearchParams->getAdultCount(),
+                'childCount' => $tripSearchParams->getChildCount(),
+                'infantCount' => $tripSearchParams->getInfantCount(),
+                'roomCount' => 1,
+            ]);
+
+            foreach ($this->accomodationApis as $api) {
+                if (method_exists($api, 'searchAccomodationOffers')) {
+                    $api->searchAccomodationOffers($accomodationParams);
+                }
+            }
+        }
+    }
 }
 

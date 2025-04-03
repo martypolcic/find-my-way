@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\V1\PopulateAirportController;
 use App\Http\Controllers\Api\V1\SearchFlightsController;
 use App\Http\Controllers\Api\V1\SearchAirportController;
 use App\Http\Controllers\Api\V1\SearchAccomodationsController;
+use App\Http\Controllers\Api\V1\SearchTripsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,5 +28,6 @@ Route::group(
         Route::get('populate-airports', [PopulateAirportController::class, 'populateAirports']);
         Route::get('search-flights', [SearchFlightsController::class, 'index']);
         Route::get('search-accomodations', [SearchAccomodationsController::class, 'index']);
+        Route::get('search-trips', [SearchTripsController::class, 'index']);
     }
 );

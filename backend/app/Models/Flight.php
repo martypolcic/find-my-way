@@ -49,4 +49,10 @@ class Flight extends Model
     function latestPrice() {
         return $this->flightPrices()->latest()->first();
     }
+
+    public function possibleReturnFlights($originalDepartureId)
+    {
+        return $this->hasMany(Flight::class, 'departure_airport_id', 'arrival_airport_id')
+                ->where('arrival_airport_id', $originalDepartureId);
+    }
 }

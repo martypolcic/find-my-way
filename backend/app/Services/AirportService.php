@@ -26,4 +26,14 @@ class AirportService
             return Airport::where('iata_code', $iataCode)->firstOrFail()->id;
         });
     }
+
+    public static function getAirportByIata(string $iataCode): ?Airport
+    {
+        return Airport::where('iata_code', $iataCode)->first();
+    }
+
+    public static function getAirportById(int $id): ?Airport
+    {
+        return Airport::find($id);
+    }
 }

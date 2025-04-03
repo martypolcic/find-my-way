@@ -32,4 +32,20 @@ class FlightService
 
         return $flight;
     }
+
+    public static function getDestinationIds(int $departureAirportId, string $departureDate): array
+    {
+        return Flight::where('departure_airport_id', $departureAirportId)
+            ->where('departure_date', $departureDate)
+            ->pluck('arrival_airport_id')
+            ->unique()
+            ->toArray();
+    }
+
+    public static function getDepartureFlights(int $departureAirportId, string $departureDate): array
+    {
+        return Flight::where('departure_airport_id', $departureAirportId)
+            ->whereDate('departure_date', $departureDate)
+            ->get();
+    }
 }

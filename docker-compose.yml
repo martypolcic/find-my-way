@@ -103,3 +103,67 @@ services:
                 - '--innodb_initialized'
             retries: 3
             timeout: 5s
+    fake-accomodations-api-1:
+        build:
+            context: './fake-accomodations-api'
+            dockerfile: Dockerfile
+        image: 'fake-accomodations-api'
+        env_file:
+            - ./fake-accomodations-api/.env.first
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
+        ports:
+            - '8004:80'
+        volumes:
+            - './fake-accomodations-api:/app'
+    fake-accomodations-api-1-db:
+        image: 'mariadb:11'
+        environment:
+            MARIADB_DATABASE: 'laravel'
+            MARIADB_USER: 'laravel'
+            MARIADB_PASSWORD: 'laravel'
+            MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 'yes'
+        ports:
+            - '9003:3306'
+        volumes:
+            - ./fake-accomodations-api/db:/var/lib/mysql:Z
+        healthcheck:
+            test:
+                - CMD
+                - healthcheck.sh
+                - '--connect'
+                - '--innodb_initialized'
+            retries: 3
+            timeout: 5s
+    fake-accomodations-api-2:
+        build:
+            context: './fake-accomodations-api'
+            dockerfile: Dockerfile
+        image: 'fake-accomodations-api'
+        env_file:
+            - ./fake-accomodations-api/.env.second
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
+        ports:
+            - '8005:80'
+        volumes:
+            - './fake-accomodations-api:/app'
+    fake-accomodations-api-2-db:
+        image: 'mariadb:11'
+        environment:
+            MARIADB_DATABASE: 'laravel'
+            MARIADB_USER: 'laravel'
+            MARIADB_PASSWORD: 'laravel'
+            MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 'yes'
+        ports:
+            - '9004:3306'
+        volumes:
+            - ./fake-accomodations-api/db2:/var/lib/mysql:Z
+        healthcheck:
+            test:
+                - CMD
+                - healthcheck.sh
+                - '--connect'
+                - '--innodb_initialized'
+            retries: 3
+            timeout: 5s

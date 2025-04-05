@@ -5,13 +5,13 @@ import { DateTime } from "luxon";
 type SearchState = {
     departureAirport: Airport | null;
     dateRange: [DateTime | null, DateTime | null];
-    passengers: { adults: number; children: number; infants: number };
+    passengers: { adults: number; children: number; infants: number; rooms: number };
 };
 
 const initialState: SearchState = {
     departureAirport: null,
     dateRange: [null, null],
-    passengers: { adults: 1, children: 0, infants: 0 },
+    passengers: { adults: 1, children: 0, infants: 0, rooms: 1 },
 };
 
 const searchSlice = createSlice({
@@ -24,7 +24,7 @@ const searchSlice = createSlice({
         setDateRange: (state, action: PayloadAction<[DateTime | null, DateTime | null]>) => {
             state.dateRange = action.payload;
         },
-        setPassengers: (state, action: PayloadAction<{ adults: number; children: number; infants: number }>) => {
+        setPassengers: (state, action: PayloadAction<{ adults: number; children: number; infants: number; rooms: number }>) => {
             state.passengers = action.payload;
         }
     },

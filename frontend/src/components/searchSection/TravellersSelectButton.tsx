@@ -23,8 +23,8 @@ const TravellerSelector = () => {
         };
     }, []);
 
-    const updatePassengers = (type: "adults" | "children" | "infants", value: number) => {
-        if (type === "adults" && value <= 0) {
+    const updatePassengers = (type: "adults" | "children" | "infants" | "rooms", value: number) => {
+        if ((type === "adults" && value <= 0) || (type === "rooms" && value <= 0)) {
             return;
         }
         dispatch(setPassengers({ ...passengers, [type]: Math.max(0, value) }));
@@ -66,6 +66,14 @@ const TravellerSelector = () => {
                             <button className="control-button" onClick={() => updatePassengers("infants", passengers.infants - 1)}>-</button>
                             <span className="control-label">{passengers.infants}</span>
                             <button className="control-button" onClick={() => updatePassengers("infants", passengers.infants + 1)}>+</button>
+                        </div>
+                    </div>
+                    <div className="dropdown-item">
+                        <span>Rooms</span>
+                        <div className="item-controls">
+                            <button className="control-button" onClick={() => updatePassengers("rooms", passengers.rooms - 1)}>-</button>
+                            <span className="control-label">{passengers.rooms}</span>
+                            <button className="control-button" onClick={() => updatePassengers("rooms", passengers.rooms + 1)}>+</button>
                         </div>
                     </div>
                 </motion.div>

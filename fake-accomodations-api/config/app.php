@@ -17,6 +17,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Fake Accomodations API Version
+    |--------------------------------------------------------------------------
+    |
+    | This value is the version of the Fake Accomodations API. It is used to
+    | determine the version of the API that is being used. You can set this
+    | value in your ".env" file. The default value is "ALPHA".
+    | 
+    */
+
+    'fake_accomodations_api_version' => env('FAKE_ACCOMODATIONS_API_VERSION', 'ALPHA'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Environment
     |--------------------------------------------------------------------------
     |

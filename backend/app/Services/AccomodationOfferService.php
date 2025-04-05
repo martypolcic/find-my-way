@@ -12,7 +12,7 @@ class AccomodationOfferService
         $latestOffer = Accomodation::where('external_id', $accomodationOfferData['external_id'])
             ->latest()
             ->first();
-        if (!$latestOffer || $latestOffer->price_value !== $accomodationOfferData['price_value']) {
+        if (!$latestOffer || $latestOffer->price_value !== $accomodationOfferData['price']) {
             AccomodationOffer::updateOrCreate(
                 [
                     'external_id' => $accomodationOfferData['external_id'],

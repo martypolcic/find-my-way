@@ -9,6 +9,7 @@ class AccomodationResourceFirst extends JsonResource
     public function toArray($request)
     {
         return [
+            'id' => $this->id,
             'title' => $this->name,
             'Location' => $this->city->name,
             'latitude' => $this->latitude,
@@ -17,6 +18,7 @@ class AccomodationResourceFirst extends JsonResource
             'numberOfRooms' => $this->rooms,
             'offers' => $this->bookings->map(function ($booking) {
                 return [
+                    'offer_id' => $booking->id,
                     'booking_start_date' => $booking->check_in_date,
                     'booking_end_date' => $booking->check_out_date,
                     'price' => $booking->total_price . ' ' . $booking->currency,

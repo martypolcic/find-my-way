@@ -114,7 +114,6 @@ class OurAirportsApi {
      */
     private function isValidAirport(array $airportData): bool {
         return !empty($airportData['iata_code'])
-            && str_contains($airportData['type'], 'airport')
-            && $airportData['scheduled_service'] === 'yes';
+            && str_contains($airportData['type'], 'airport');
     }
 }

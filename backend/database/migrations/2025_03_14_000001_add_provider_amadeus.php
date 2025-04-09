@@ -9,15 +9,26 @@ return new class extends Migration
     {
         DB::table('providers')->insert([
             'name' => 'Amadeus',
-            'class_name' => 'AmadeusApi',
+        ]);
+
+        DB::table('provider_services')->insert([
+            'provider_id' => DB::table('providers')->where('name', 'Amadeus')->first()->id,
+            'service_type' => 'flight',
+            'class_name' => 'AmadeusFlightsApi',
             'active' => true,
-            'created_at' => now(),
-            'updated_at' => now(),
+        ]);
+
+        DB::table('provider_services')->insert([
+            'provider_id' => DB::table('providers')->where('name', 'Amadeus')->first()->id,
+            'service_type' => 'accomodation',
+            'class_name' => 'AmadeusAccomodationsApi',
+            'active' => true,
         ]);
     }
 
     public function down(): void
     {
+        DB::table('provider_services')->where('provider_id', DB::table('providers')->where('name', 'Amadeus')->first()->id)->delete();
         DB::table('providers')->where('name', 'Amadeus')->delete();
     }
 };

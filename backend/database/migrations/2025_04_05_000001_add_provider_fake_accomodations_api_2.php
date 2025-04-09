@@ -9,15 +9,19 @@ return new class extends Migration
     {
         DB::table('providers')->insert([
             'name' => 'FakeAccomodationApi2',
+        ]);
+
+        DB::table('provider_services')->insert([
+            'provider_id' => DB::table('providers')->where('name', 'FakeAccomodationApi2')->first()->id,
+            'service_type' => 'accomodation',
             'class_name' => 'FakeAccomodationApi2',
             'active' => true,
-            'created_at' => now(),
-            'updated_at' => now(),
         ]);
     }
 
     public function down(): void
     {
+        DB::table('provider_services')->where('class_name', 'FakeAccomodationApi2')->delete();
         DB::table('providers')->where('name', 'FakeAccomodationApi2')->delete();
     }
 };

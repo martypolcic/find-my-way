@@ -9,15 +9,19 @@ return new class extends Migration
     {
         DB::table('providers')->insert([
             'name' => 'Ryanair',
-            'class_name' => 'RyanairApi',
+        ]);
+
+        DB::table('provider_services')->insert([
+            'provider_id' => DB::table('providers')->where('name', 'Ryanair')->first()->id,
+            'service_type' => 'flight',
+            'class_name' => 'RyanairFlightsApi',
             'active' => true,
-            'created_at' => now(),
-            'updated_at' => now(),
         ]);
     }
 
     public function down(): void
     {
+        DB::table('provider_services')->where('class_name', 'RyanairFlightsApi')->delete();
         DB::table('providers')->where('name', 'Ryanair')->delete();
     }
 };

@@ -14,9 +14,18 @@ return new class extends Migration
         Schema::create('providers', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->string('class_name')->unique();
+            $table->timestamps();
+        });
+        
+        Schema::create('provider_services', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('provider_id')->constrained()->cascadeOnDelete();
+            $table->enum('service_type', ['flight', 'accomodation']);
+            $table->string('class_name');
             $table->boolean('active')->default(true);
             $table->timestamps();
+            
+            $table->unique(['provider_id', 'service_type']);
         });
     }
 
@@ -25,6 +34,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('provider_services');
         Schema::dropIfExists('providers');
     }
 };

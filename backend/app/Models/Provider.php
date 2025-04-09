@@ -11,11 +11,20 @@ class Provider extends Model
 
     protected $fillable = [
         'name',
-        'class_name',
-        'active',
     ];
 
-    function flights() {
-        return $this->hasMany(Flight::class, 'provider_id');
+    public function services()
+    {
+        return $this->hasMany(ProviderService::class);
+    }
+    
+    public function flightServices()
+    {
+        return $this->services()->where('service_type', 'flight');
+    }
+    
+    public function accomodationServices()
+    {
+        return $this->services()->where('service_type', 'accomodation');
     }
 }

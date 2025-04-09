@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('external_id');
             $table->string('name');
             $table->foreignId('airport_id')->constrained()->cascadeOnDelete();
-            $table->decimal('latitude', 10, 8)->index();
-            $table->decimal('longitude', 11, 8)->index();
+            $table->decimal('latitude', 10, 8)->index()->nullable();
+            $table->decimal('longitude', 11, 8)->index()->nullable();
             $table->string('provider_id');
             $table->string('price_level')->nullable();
             $table->text('description')->nullable();

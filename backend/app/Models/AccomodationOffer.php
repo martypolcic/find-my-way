@@ -24,7 +24,7 @@ class AccomodationOffer extends Model
         'check_out' => 'datetime',
     ];
 
-    public function accommodation()
+    public function accomodation()
     {
         return $this->belongsTo(Accomodation::class);
     }

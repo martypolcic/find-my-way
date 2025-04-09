@@ -34,6 +34,6 @@ class AirportService
 
     public static function getAirportById(int $id): ?Airport
     {
-        return Airport::find($id);
+        return Airport::query()->find($id);
     }
 }

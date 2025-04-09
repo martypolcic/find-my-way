@@ -35,8 +35,12 @@ class FlightService
 
     public static function getDestinationIds(int $departureAirportId, string $departureDate): array
     {
-        return Flight::where('departure_airport_id', $departureAirportId)
+        $providerService = new ProviderServiceService();
+        $flightsProviders = $providerService->getActiveFlightProviders();
+        return Flight::query()
+            ->where('departure_airport_id', $departureAirportId)
             ->whereDate('departure_date', $departureDate)
+            ->whereIn('provider_id', $flightsProviders)
             ->pluck('arrival_airport_id')
             ->unique()
             ->toArray();

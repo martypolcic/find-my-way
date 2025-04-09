@@ -24,30 +24,34 @@ class FakeFlightsApi1 implements FlightsApi {
     {
         return 'FakeFlightsApi1';
     }
-
-    private function fetchDestinations(FlightsSearchParams $searchParams)
+    
+    public function searchFlightsAsync(FlightsSearchParams $search_params): \GuzzleHttp\Promise\PromiseInterface
     {
-        $departureDate = $searchParams->getDepartureDate()->format('Y-m-d');
-
-        try {
-            $response = $this->httpClient->get('flights', [
-                'query' => [
-                    'departureAirportIataCode' => $searchParams->getDepartureAirportIataCode(),
-                    'departureDate' => $departureDate,
-                    'outboundDepartureDateTo' => $departureDate,
-                    'passengerCount' => $searchParams->getAdultCount(),
-                ],
-            ]);
-            return json_decode($response->getBody()->getContents(), true);
-        } catch (\GuzzleHttp\Exception\GuzzleException $e) {
-            // TODO: Log error
-            return null;
-        }
+        $departureDate = $search_params->getDepartureDate()->format('Y-m-d');
+        
+        $promise = $this->httpClient->getAsync('flights', [
+            'query' => [
+                'departureAirportIataCode' => $search_params->getDepartureAirportIataCode(),
+                'departureDate' => $departureDate,
+                'outboundDepartureDateTo' => $departureDate,
+                'passengerCount' => $search_params->getAdultCount(),
+            ],
+        ]);
+        
+        return $promise->then(
+            function ($response) use ($search_params) {
+                $data = json_decode($response->getBody()->getContents(), true);
+                $this->processFlightResponse($data, $search_params);
+            },
+            function ($exception) {
+                // Log error
+                return null;
+            }
+        );
     }
 
-    public function searchFlights(FlightsSearchParams $search_params)
+    private function processFlightResponse(?array $response, FlightsSearchParams $search_params)
     {
-        $response = $this->fetchDestinations($search_params);
         if (!$response || empty($response['data'])) return;
 
         $departureAirportId = AirportService::getAirportIdByIata($search_params->getDepartureAirportIataCode());

@@ -9,8 +9,8 @@ use App\Services\ApiService;
 use App\Services\AirportService;
 use App\Models\Accomodation;
 use App\Models\Flight;
-use App\Models\AccomodationOffer;
 use App\Http\Resources\V1\TripResource;
+use App\Services\ProviderServiceService;
 
 class SearchTripsController extends Controller
 {
@@ -25,10 +25,16 @@ class SearchTripsController extends Controller
         $departureAirportIataCode = $tripsSearchParams->getDepartureAirportIataCode();
         $departureAirportId = AirportService::getAirportByIata($departureAirportIataCode)->id;
 
+        $providerService = new ProviderServiceService();
+        $flightsProviders = $providerService->getActiveFlightProviders();
+        $accomodationsProviders = $providerService->getActiveAccomodationProviders();
+
+
          // Get departure flights with arrival airports
         $departureFlights = Flight::with(['arrivalAirport',])
             ->where('departure_airport_id', $departureAirportId)
             ->whereDate('departure_date', $tripsSearchParams->getDepartureDate())
+            ->whereIn('provider_id', $flightsProviders)
             ->get();
         
        // Get accomodations with their offers for destination airports
@@ -39,6 +45,7 @@ class SearchTripsController extends Controller
         ->whereIn('airport_id', 
             $departureFlights->pluck('arrival_airport_id')->unique()
         )
+        ->whereIn('provider_id', $accomodationsProviders)
         ->get()
         ->groupBy('airport_id');
 
@@ -47,6 +54,8 @@ class SearchTripsController extends Controller
                 $departureFlights->pluck('arrival_airport_id')->unique()
             )
             ->where('arrival_airport_id', $departureAirportId)
+            ->whereDate('departure_date', $tripsSearchParams->getReturnDate())
+            ->whereIn('provider_id', $flightsProviders)
             ->get()
             ->groupBy('departure_airport_id');
 

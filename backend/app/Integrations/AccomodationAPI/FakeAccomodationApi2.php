@@ -2,16 +2,15 @@
 
 namespace App\Integrations\AccomodationAPI;
 
-use App\Integrations\AccomodationApi;
+use App\Integrations\AccomodationOffersSearch;
 use App\Integrations\Params\AccomodationsSearchParams;
 use App\Services\AirportService;
 use GuzzleHttp\Client as HttpClient;
-use DateTimeImmutable;
 use App\Models\Provider;
 use App\Services\AccomodationService;
 use App\Services\AccomodationOfferService;
 
-class FakeAccomodationApi2 implements AccomodationApi
+class FakeAccomodationApi2 implements AccomodationOffersSearch
 {
     private readonly HttpClient $httpClient;
 
@@ -27,41 +26,39 @@ class FakeAccomodationApi2 implements AccomodationApi
         return 'FakeAccomodationApi2';
     }
 
-    private function fetchAccomodations(string $destinationCity, DateTimeImmutable $checkIn, DateTimeImmutable $checkOut, int $adults, int $children, int $rooms)
-    {
-        try {
-            $response = $this->httpClient->get('accomodation-offers', [
-                'query' => [
-                    'city' => $destinationCity,
-                    'check_in' => $checkIn->format('Y-m-d'),
-                    'check_out' => $checkOut->format('Y-m-d'),
-                    'adults' => $adults,
-                    'children' => $children,
-                    'rooms' => $rooms,
-                ],
-            ]);
-
-            return json_decode($response->getBody()->getContents(), true);
-        } catch (\GuzzleHttp\Exception\GuzzleException $e) {
-            // TODO: Log error
-            return null;
-        }
-    }
-
-    public function searchAccomodationOffers(AccomodationsSearchParams $searchParams)
+    public function searchAccomodationOffersAsync(AccomodationsSearchParams $searchParams): \GuzzleHttp\Promise\PromiseInterface
     {
         $destinationAirport = AirportService::getAirportByIata($searchParams->getAirportIataCode());
-        $response = $this->fetchAccomodations(
-            $destinationAirport->city,
-            $searchParams->getCheckInDate(),
-            $searchParams->getCheckOutDate(),
-            $searchParams->getAdultCount(),
-            $searchParams->getChildCount(),
-            $searchParams->getRoomCount()
+        
+        $promise = $this->httpClient->getAsync('accomodation-offers', [
+            'query' => [
+                'city' => $destinationAirport->city,
+                'check_in' => $searchParams->getCheckInDate()->format('Y-m-d'),
+                'check_out' => $searchParams->getCheckOutDate()->format('Y-m-d'),
+                'adults' => $searchParams->getAdultCount(),
+                'children' => $searchParams->getChildCount(),
+                'rooms' => $searchParams->getRoomCount(),
+            ],
+        ]);
+
+        return $promise->then(
+            function ($response) use ($searchParams) {
+                $data = json_decode($response->getBody()->getContents(), true);
+                $this->processAccomodationOfferResponse($data, $searchParams);
+            },
+            function ($error) {
+                // Handle error
+                return [];
+            }
         );
+    }
+
+    private function processAccomodationOfferResponse(?array $response, AccomodationsSearchParams $searchParams): void
+    {
         if (!$response || empty($response['data'])) return;
 
-        $providerId = Provider::where('name', self::getProvider())->first()?->id;
+        $providerId = Provider::where('name', self::getProvider())->first()->id;
+        $destinationAirport = AirportService::getAirportByIata($searchParams->getAirportIataCode());
 
         foreach ($response['data'] as $accomodation) {
             $accomodationData = [

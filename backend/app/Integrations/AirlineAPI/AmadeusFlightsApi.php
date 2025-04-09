@@ -12,7 +12,7 @@ use App\Services\AirlineService;
 use App\Services\FlightService;
 use App\Services\FlightPriceService;
 
-class AmadeusApi extends AmadeusBaseApi implements FlightsApi {
+class AmadeusFlightsApi extends AmadeusBaseApi implements FlightsApi {
 
     public function searchFlights(FlightsSearchParams $searchParams)
     {
@@ -72,5 +72,56 @@ class AmadeusApi extends AmadeusBaseApi implements FlightsApi {
         ];
 
         return AirlineService::createAirline($airlineData)->id;
+    }
+
+    // ------------------ REMAKE
+
+    private function processFlightResponse(?array $response, FlightsSearchParams $searchParams): void
+    {
+        if (!$response || empty($response['data'])) return;
+
+        $departureAirportId = AirportService::getAirportIdByIata($searchParams->getDepartureAirportIataCode());
+        $providerId = Provider::where('name', self::getProvider())->first()->id;
+
+        foreach ($response['data'] as $destination) {
+            $flightData = [
+                'flight_number' => null,
+                'flight_key' => 'AMADEUS~' . $destination['origin'] . '~' . $destination['destination'] . '~' . $destination['departureDate'],
+                'departure_date' => $destination['departureDate'],
+                'arrival_date' => null,
+                'departure_airport_id' => $departureAirportId,
+                'arrival_airport_id' => AirportService::getAirportIdByIata($destination['destination']),
+                'price_value' => $destination['price']['total'],
+                'currency_code' => 'EUR',
+                'airline_id' => null,
+                'provider_id' => $providerId,
+            ];
+
+            $flight = FlightService::createOrUpdateFlight($flightData);
+            FlightPriceService::storeFlightPrice($flight->id, $destination['price']['total'], 'EUR');
+        }
+    }
+
+    public function searchFlightsAsync(FlightsSearchParams $search_params): \GuzzleHttp\Promise\PromiseInterface
+    {
+        $departureDate = $search_params->getDepartureDate()->format('Y-m-d');
+
+        $promise = $this->makeAsyncRequest('GET', 'v1/shopping/flight-destinations', [
+            'origin' => $search_params->getDepartureAirportIataCode(),
+            'departureDate' => $departureDate,
+            'oneWay' => 'true',
+            'nonStop' => 'false',
+        ]);
+
+        return $promise->then(
+            function ($response) use ($search_params) {
+                $data = json_decode($response->getBody()->getContents(), true);
+                $this->processFlightResponse($data, $search_params);
+            },
+            function ($exception) {
+                // Log error
+                return null;
+            }
+        );
     }
 }

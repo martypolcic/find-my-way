@@ -9,6 +9,7 @@ use App\Integrations\Params\FlightsSearchParams;
 use App\Services\ApiService;
 use App\Services\AirportService;
 use App\Models\Flight;
+use App\Services\ProviderServiceService;
 
 class SearchFlightsController extends Controller
 {
@@ -20,10 +21,13 @@ class SearchFlightsController extends Controller
         $apiService = new ApiService();
         $apiService->searchFlights($searchParams);
 
-        $departureAirportId = AirportService::getAirportIdByIata($searchParams->getDepartureAirportIataCode());
-        $departureDate = $searchParams->getDepartureDate()->format('Y-m-d');
-        $flights = Flight::where('departure_airport_id', $departureAirportId)
-            ->whereDate('departure_date', $departureDate)
+        $providerServiceService = new ProviderServiceService();
+        $activeFlightProviders = $providerServiceService->getActiveFlightProviders();
+        
+        $flights = Flight::query()
+            ->where('departure_airport_id', AirportService::getAirportIdByIata($searchParams->getDepartureAirportIataCode()))
+            ->whereDate('departure_date', $searchParams->getDepartureDate()->format('Y-m-d'))
+            ->whereIn('provider_id', $activeFlightProviders)
             ->get();
 
         return new FlightCollection($flights);

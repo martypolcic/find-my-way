@@ -8,7 +8,6 @@ use App\Services\ApiService;
 use App\Http\Requests\V1\SearchAccomodationsRequest;
 use App\Http\Resources\V1\AccomodationResource;
 use App\Models\Accomodation;
-use App\Models\AccomodationOffer;
 use App\Services\AirportService;
 
 class SearchAccomodationsController extends Controller
@@ -19,13 +18,9 @@ class SearchAccomodationsController extends Controller
         $searchParams = AccomodationsSearchParams::fromArray($validated);
 
         $apiService = new ApiService();
-        $apiService->searchAccomodationOffers($searchParams);
+        $apiService->searchAccomodations($searchParams);
 
         $airport = AirportService::getAirportByIata($searchParams->getAirportIataCode());
-
-        $accomodationIds = Accomodation::where('airport_id', $airport->id) 
-            ->pluck('id')
-            ->toArray();
 
         $accomodations = Accomodation::where('airport_id', $airport->id)
             ->with(['offers' => function($query) use ($searchParams) {

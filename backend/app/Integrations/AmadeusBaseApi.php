@@ -64,4 +64,19 @@ class AmadeusBaseApi {
             $this->tokenRetry = false;
         }
     }
+
+    protected function makeAsyncRequest(string $method, string $endpoint, array $params = []): \GuzzleHttp\Promise\PromiseInterface
+    {
+        if ($this->apiToken === null) {
+            $this->requestNewToken();
+        }
+        
+        return $this->httpClient->requestAsync($method, $endpoint, [
+            'headers' => [
+                'Authorization' => "Bearer {$this->apiToken}",
+                'Accept' => 'application/json',
+            ],
+            'query' => $params,
+        ]);
+    }
 }

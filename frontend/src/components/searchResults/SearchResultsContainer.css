@@ -1,0 +1,68 @@
+.card-picker-container {
+    display: flex;
+    position: relative;
+    height: 90vh;
+    max-height: 60em;
+    width: 95%;
+    max-width: 110em;
+    margin: 0 auto;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+    border-radius: 1em;
+    margin-bottom: 100vh;
+}
+  
+.search-results-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
+.search-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.search-overlay-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 800px;
+    max-height: 90vh;
+    position: relative;
+}
+
+.close-overlay-button {
+    position: absolute;
+    top: .5rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #666;
+}
+
+.close-overlay-button:hover {
+    color: #333;
+}
+  
+@media (max-width: 768px) {
+    .card-picker-container {
+      flex-direction: column;
+      height: auto;
+    }
+    
+    .search-results-container {
+      height: auto;
+      overflow-y: visible;
+    }
+}

@@ -1,0 +1,30 @@
+.destination-card .card-image::after {
+    content: 'Destination';
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+  }
+  
+  .destination-details {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  
+  .destination-details span {
+    font-size: 0.8rem;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+  }
+  
+  .destination-details span::before {
+    content: '•';
+    margin-right: 4px;
+    color: #cbd5e1;
+  }

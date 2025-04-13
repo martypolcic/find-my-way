@@ -1,0 +1,74 @@
+.flight-details {
+  margin-top: 12px;
+}
+
+.flight-route {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.flight-time {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 60px;
+}
+
+.flight-time .time {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.flight-time .airport {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+.flight-duration {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding: 0 16px;
+  flex-grow: 1;
+}
+
+.flight-duration::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #cbd5e1;
+  z-index: 1;
+}
+
+.plane-icon {
+  position: relative;
+  z-index: 2;
+  padding: 0 8px;
+  color: #64748b;
+  font-size: 1rem;
+}
+
+.duration-text {
+  position: relative;
+  z-index: 2;
+  padding: 0 8px;
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+.flight-date {
+  text-align: center;
+  color: #64748b;
+  font-size: 0.85rem;
+  padding-top: 8px;
+  border-top: 1px dashed #e2e8f0;
+}

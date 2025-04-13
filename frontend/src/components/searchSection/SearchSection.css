@@ -70,7 +70,7 @@
                 cursor: pointer;
 
                 &:hover {
-                    background: #007A63;
+                    background-color: #007A63;
                 }
             }
         }

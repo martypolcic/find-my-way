@@ -1,0 +1,97 @@
+/* TripOverview.css */
+.trip-overview {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .destination-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  .destination-header h2 {
+    color: #1e293b;
+    margin-bottom: 8px;
+  }
+  
+  .travel-dates {
+    color: #64748b;
+    font-size: 1.1rem;
+  }
+  
+  .trip-details-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  
+  .trip-column {
+    background: #f8fafc;
+    border-radius: 10px;
+    padding: 20px;
+  }
+  
+  .trip-column h3 {
+    color: #334155;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 1.1rem;
+  }
+  
+  .detail-card {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  }
+  
+  .route, .name {
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 8px;
+  }
+  
+  .time, .dates {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+  }
+  
+  .price {
+    color: #00916E;
+    font-weight: 600;
+    margin-top: 10px;
+  }
+  
+  .empty-state {
+    color: #94a3b8;
+    font-style: italic;
+    text-align: center;
+    padding: 20px 0;
+  }
+  
+  .price-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin: 40px 0;
+  }
+  
+  .divider-line {
+    flex: 1;
+    height: 1px;
+    background: #e2e8f0;
+  }
+  
+  .total-price {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #00916E;
+    min-width: 200px;
+    text-align: center;
+  }

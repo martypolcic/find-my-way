@@ -21,6 +21,10 @@ class Airport extends Model
         'active',
     ];
 
+    protected $casts = [
+        'active' => 'boolean',
+    ];
+
     function flights() {
         return $this->hasMany(Flight::class);
     }

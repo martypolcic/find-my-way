@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Airport, SearchState } from "../types";
-import { DateTime } from "luxon";
 import { performSearch } from "./searchThunks";
 
 const initialState: SearchState = {
@@ -21,7 +20,7 @@ const searchSlice = createSlice({
         setDepartureAirport: (state, action: PayloadAction<Airport | null>) => {
             state.departureAirport = action.payload;
         },
-        setDateRange: (state, action: PayloadAction<[DateTime | null, DateTime | null]>) => {
+        setDateRange: (state, action: PayloadAction<[string | null, string | null]>) => {
             state.dateRange = action.payload;
         },
         setPassengers: (state, action: PayloadAction<{ adults: number; children: number; infants: number; rooms: number }>) => {

@@ -36,8 +36,8 @@ const SearchButton = ({ searchParams }: SearchButtonProps) => {
 
         dispatch(setDepartureAirport(searchParams.departureAirport));
         dispatch(setDateRange([
-            searchParams.dateRange[0] ? DateTime.fromISO(searchParams.dateRange[0]) : null,
-            searchParams.dateRange[1] ? DateTime.fromISO(searchParams.dateRange[1]) : null,
+            searchParams.dateRange[0] ? DateTime.fromISO(searchParams.dateRange[0]).toFormat('yyyy-MM-dd').toString() : null,
+            searchParams.dateRange[1] ? DateTime.fromISO(searchParams.dateRange[1]).toFormat('yyyy-MM-dd').toString() : null,
         ]));
         dispatch(setPassengers(searchParams.passengers));
         

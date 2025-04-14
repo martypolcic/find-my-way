@@ -1,5 +1,3 @@
-import { DateTime } from "luxon";
-
 type Airport = {
     id: number;
     iataCode: string;
@@ -14,7 +12,7 @@ type Airport = {
 type SearchState = {
     // Search parameters
     departureAirport: Airport | null;
-    dateRange: [DateTime | null, DateTime | null];
+    dateRange: [string | null, string | null];
     passengers: { adults: number; children: number; infants: number; rooms: number };
 
     // Request state

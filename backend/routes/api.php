@@ -4,22 +4,18 @@ use App\Http\Controllers\Api\V1\AirportController;
 use App\Http\Controllers\Api\V1\FlightController;
 use App\Http\Controllers\Api\V1\FlightPriceController;
 use App\Http\Controllers\Api\V1\PopulateAirportController;
+use App\Http\Controllers\Api\V1\ProviderServiceController;
 use App\Http\Controllers\Api\V1\SearchFlightsController;
 use App\Http\Controllers\Api\V1\SearchAirportController;
 use App\Http\Controllers\Api\V1\SearchAccomodationsController;
 use App\Http\Controllers\Api\V1\SearchTripsController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+Route::middleware('web')->post('/login', [AuthController::class, 'login']);
 
-Route::group(
-    [
-        'prefix' => 'v1',
-        'namespace' => 'App\Http\Controllers\Api\V1'
-    ],
+Route::prefix('v1')->group( 
     function () {
         Route::apiResource('airports', AirportController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
         Route::apiResource('flights', FlightController::class)->only(['index', 'show']);
@@ -31,3 +27,14 @@ Route::group(
         Route::get('search-trips', [SearchTripsController::class, 'index']);
     }
 );
+
+Route::middleware([
+    EnsureFrontendRequestsAreStateful::class,
+    'auth:sanctum'
+])->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/user', [AuthController::class, 'user']);
+
+    Route::get('/provider-services', [ProviderServiceController::class, 'index']);
+    Route::patch('/provider-services/{id}/toggle', [ProviderServiceController::class, 'toggle']);
+});

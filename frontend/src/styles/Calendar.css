@@ -96,9 +96,6 @@
     background: #00916E;
     color: white;
    }
-   .react-calendar--selectRange .react-calendar__tile--hover {
-    background-color: #f8f8fa;
-   }
    .react-calendar__tile--range {
     background: #EDFDF7;
     color: #00916E;

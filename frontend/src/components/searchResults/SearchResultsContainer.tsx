@@ -1,50 +1,33 @@
 import { useState } from "react";
-import SearchResults from "./SearchResults";
 import Sidebar from "../sidebarSection/Sidebar";
-import SearchSection from "../searchSection/SearchSection"; // Import your search component
+import SearchResults from "./SearchResults";
+import { flows, SearchMode } from "./searchFlowConfig";
 import './SearchResultsContainer.css';
 
 const SearchResultsContainer = () => {
-    const [currentStep, setCurrentStep] = useState('destination');
-    const [showSearchOverlay, setShowSearchOverlay] = useState(false);
+  const searchMode: SearchMode = 'trip';
+  const steps = flows[searchMode];
 
-    const handleStepChange = (step: string) => {
-        if (step === 'search') {
-            setShowSearchOverlay(true);
-        } else {
-            setCurrentStep(step);
-            setShowSearchOverlay(false);
-        }
-    };
+  const [currentStep, setCurrentStep] = useState(steps[0].key);
 
-    const closeSearchOverlay = () => {
-        setShowSearchOverlay(false);
-    };
+  const handleStepChange = (step: string) => {
+      setCurrentStep(step);
+  };
 
-    return (
-        <div className="card-picker-container">
-            <Sidebar 
-                currentStep={currentStep} 
-                onStepChange={handleStepChange}
-            />
-            <SearchResults currentStep={currentStep} onStepChange={handleStepChange} />
-            
-            {/* Search Overlay */}
-            {showSearchOverlay && (
-                <div className="search-overlay">
-                    <div className="search-overlay-content">
-                        <button 
-                            className="close-overlay-button" 
-                            onClick={closeSearchOverlay}
-                        >
-                            ×
-                        </button>
-                        <SearchSection />
-                    </div>
-                </div>
-            )}
-        </div>
-    );
+  return (
+    <div className="card-picker-container">
+      <Sidebar 
+        currentStep={currentStep} 
+        onStepChange={handleStepChange}
+        steps={steps}
+      />
+      <SearchResults 
+        currentStep={currentStep} 
+        onStepChange={handleStepChange}
+        searchMode={searchMode}
+      />
+    </div>
+  );
 }
 
 export default SearchResultsContainer;

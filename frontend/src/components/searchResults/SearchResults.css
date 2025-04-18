@@ -37,11 +37,25 @@
 }
 
 .no-results {
+  margin: 2rem auto;
+  padding: 2rem;
+  max-width: 600px;
+  background-color: #1B3022;
+  color: white;
+  border-radius: 12px;
   text-align: center;
-  padding: 40px;
   font-size: 1.2rem;
-  color: #555;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
 }
+
+.tip-text {
+  margin-top: 1rem;
+  color: #A7C6DA;
+  font-size: 0.95rem;
+  opacity: 0.85;
+}
+
 
 @media (max-width: 768px) {
   .cards-grid {

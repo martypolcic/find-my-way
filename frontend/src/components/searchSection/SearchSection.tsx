@@ -1,35 +1,42 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./SearchSection.css";
 import AirportSearchButton from "./AirportSelectButton";
 import DateSelectButton from "./DateSelectButton";
 import TravellerSelectorButton from "./TravellersSelectButton";
 import SearchButton from "./SearchButton";
 import { Airport } from "../../types";
+import { useAppSelector } from "../../store/hooks";
 
-const SearchSection = () => {
-  const [localSearchParams, setLocalSearchParams] = useState({
-    departureAirport: null as Airport | null,
-    dateRange: [null, null] as [string | null, string | null],
-    passengers: {
-      adults: 1,
-      children: 0,
-      infants: 0,
-      rooms: 1
-    }
+interface SearchSectionProps {
+  variant?: 'default' | 'overlay';
+  onSearchComplete?: () => void;
+}
+
+const SearchSection = ({ variant = 'default', onSearchComplete } : SearchSectionProps ) => {
+  const initialSearchParams = useAppSelector((state) => state.search);
+  const [departureAirport, setDepartureAirport] = useState<Airport | null>(null);
+  const [dateRange, setDateRange] = useState<[string | null, string | null]>([null, null]);
+  const [passengers, setPassengers] = useState({
+    adults: 1,
+    children: 0,
+    infants: 0,
+    rooms: 1
   });
 
+  useEffect(() => {
+    if (initialSearchParams) {
+      setDepartureAirport(initialSearchParams.departureAirport);
+      setDateRange(initialSearchParams.dateRange);
+      setPassengers(initialSearchParams.passengers);
+    }
+  }, [initialSearchParams]);
+
   const handleAirportChange = (airport: Airport | null) => {
-    setLocalSearchParams(prev => ({
-      ...prev,
-      departureAirport: airport
-    }));
+    setDepartureAirport(airport);
   };
 
   const handleDateChange = (dates: [string | null, string | null]) => {
-    setLocalSearchParams(prev => ({
-      ...prev,
-      dateRange: dates
-    }));
+    setDateRange(dates);
   };
 
   const handlePassengersChange = (passengers: {
@@ -38,28 +45,30 @@ const SearchSection = () => {
     infants: number;
     rooms: number;
   }) => {
-    setLocalSearchParams(prev => ({
-      ...prev,
-      passengers
-    }));
+    setPassengers(passengers);
   };
 
   return (
-    <div className="relative flex flex-row justify-center items-center gap-4 p-4 shadow-lg rounded-xl">
+    <div className={`search-section-container ${variant === 'overlay' ? 'overlay-style' : 'default-style'}`}>
       <AirportSearchButton 
-        selectedAirport={localSearchParams.departureAirport} 
+        selectedAirport={departureAirport} 
         onAirportChange={handleAirportChange} 
       />
       <DateSelectButton 
-        selectedDates={localSearchParams.dateRange} 
+        selectedDates={dateRange} 
         onDateChange={handleDateChange} 
       />
       <TravellerSelectorButton 
-        selectedPassengers={localSearchParams.passengers} 
+        selectedPassengers={passengers} 
         onPassengersChange={handlePassengersChange} 
       />
       <SearchButton 
-        searchParams={localSearchParams} 
+        searchParams={{
+          departureAirport,
+          dateRange,
+          passengers
+        }}
+        onSearchComplete={onSearchComplete}
       />
     </div>
   );

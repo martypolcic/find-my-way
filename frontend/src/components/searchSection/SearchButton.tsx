@@ -2,6 +2,7 @@ import { useAppDispatch } from '../../store/hooks';
 import { performSearch } from '../../store/searchThunks';
 import { setDepartureAirport, setDateRange, setPassengers } from '../../store/searchSlice';
 import { Airport } from '../../types';
+import { clearSelections } from '../../store/selectionSlice';
 import { DateTime } from 'luxon';
 
 interface SearchButtonProps {
@@ -15,34 +16,44 @@ interface SearchButtonProps {
       rooms: number;
     };
   };
+  onSearchComplete?: () => void;
 }
 
-const SearchButton = ({ searchParams }: SearchButtonProps) => {
+const SearchButton = ({ searchParams, onSearchComplete }: SearchButtonProps) => {
     const dispatch = useAppDispatch();
 
     const handleSearch = () => {
         if (
-            !searchParams.departureAirport?.iataCode || 
-            !searchParams.dateRange[0] ||
-            !searchParams.dateRange[1] ||
-            searchParams.passengers.adults <= 0 ||
-            searchParams.passengers.children < 0 ||
-            searchParams.passengers.infants < 0 ||
-            searchParams.passengers.rooms < 0
+          !searchParams.departureAirport?.iataCode || 
+          !searchParams.dateRange[0] ||
+          !searchParams.dateRange[1] ||
+          searchParams.passengers.adults <= 0 ||
+          searchParams.passengers.children < 0 ||
+          searchParams.passengers.infants < 0 ||
+          searchParams.passengers.rooms < 0
         ) {
-            alert('Please fill in all fields');
-            return;
+          alert('Please fill in all fields');
+          return;
         }
-
+        dispatch(clearSelections());
+      
         dispatch(setDepartureAirport(searchParams.departureAirport));
         dispatch(setDateRange([
-            searchParams.dateRange[0] ? DateTime.fromISO(searchParams.dateRange[0]).toFormat('yyyy-MM-dd').toString() : null,
-            searchParams.dateRange[1] ? DateTime.fromISO(searchParams.dateRange[1]).toFormat('yyyy-MM-dd').toString() : null,
+          searchParams.dateRange[0]
+            ? DateTime.fromISO(searchParams.dateRange[0]).toFormat('yyyy-MM-dd').toString()
+            : null,
+          searchParams.dateRange[1]
+            ? DateTime.fromISO(searchParams.dateRange[1]).toFormat('yyyy-MM-dd').toString()
+            : null,
         ]));
         dispatch(setPassengers(searchParams.passengers));
-        
+
         dispatch(performSearch());
-    };
+
+        if (onSearchComplete) {
+            onSearchComplete();
+        }
+      };
 
     return (
         <button

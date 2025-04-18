@@ -1,5 +1,5 @@
 import { useAppSelector } from '../../store/hooks';
-import { 
+import {
   selectCurrentDestination,
   selectSelectedDepartureFlight,
   selectSelectedReturnFlight,
@@ -9,10 +9,16 @@ import {
 import { DateTime } from 'luxon';
 import './Sidebar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLocationDot, faCalendarWeek, faPeopleGroup, faPlaneDeparture, faPlaneArrival, faKey, faUmbrellaBeach, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faLocationDot, faCalendarWeek, faPeopleGroup } from '@fortawesome/free-solid-svg-icons';
 import TripOverviewButton from '../searchResults/TripOverviewButton';
 
-const Sidebar = ({currentStep, onStepChange} : {currentStep: string, onStepChange:(step: string) => void}) => {
+type SidebarProps = {
+  currentStep: string;
+  onStepChange: (step: string) => void;
+  steps: { key: string; label: string }[];
+};
+
+const Sidebar = ({ currentStep, onStepChange, steps }: SidebarProps) => {
   const searchParams = useAppSelector((state) => state.search);
   const destination = useAppSelector(selectCurrentDestination);
   const departureFlight = useAppSelector(selectSelectedDepartureFlight);
@@ -24,187 +30,110 @@ const Sidebar = ({currentStep, onStepChange} : {currentStep: string, onStepChang
     if (
       (step === 'departure' && !stepAvailability.canSelectDeparture) ||
       (step === 'return' && !stepAvailability.canSelectReturn) ||
-      (step === 'accomodation' && !stepAvailability.canSelectAccommodation)
-    ) {
-      return;
-    }
+      (step === 'accommodation' && !stepAvailability.canSelectAccommodation)
+    ) return;
+
     onStepChange(step);
   };
 
   return (
     <div className="sidebar">
-      <div className='sticky-content'>
-
-        {/* Search Params */}
-        <div 
-          className="search-parameters-container" 
-          onClick={() => onStepChange('search')}
-        >
-          <div className="search-parameters" >
+      <div className="sticky-content">
+        
+        <div className="search-parameters-container" onClick={() => onStepChange('search')}>
+          <div className="search-parameters">
             <h2>Search Parameters</h2>
             <hr />
+            <p className="search-params-label"><FontAwesomeIcon icon={faLocationDot} />Departure Airport</p>
+            <p>{searchParams.departureAirport?.name || 'Not selected'}</p>
 
-            <p className='search-params-label'>
-              <FontAwesomeIcon icon={faLocationDot} />
-              Departure Airport
-            </p>
-            <p> 
-              {
-                searchParams.departureAirport ? searchParams.departureAirport.name : "Not selected"
-              }
-            </p>
-
-            <p className='search-params-label'>
-              <FontAwesomeIcon icon={faCalendarWeek} />
-              Dates
-            </p>
+            <p className="search-params-label"><FontAwesomeIcon icon={faCalendarWeek} /> Dates</p>
             <p>
-              {
-                searchParams.dateRange[0] ? DateTime.fromISO(searchParams.dateRange[0].toString()).toFormat("dd MMM") : "Depart"
-              } 
-              -
-              {
-                searchParams.dateRange[1] ? DateTime.fromISO(searchParams.dateRange[1].toString()).toFormat("dd MMM") : "Return"
-              }
+              {searchParams.dateRange[0]
+                ? DateTime.fromISO(searchParams.dateRange[0].toString()).toFormat('dd MMM')
+                : 'Depart'} 
+              - 
+              {searchParams.dateRange[1]
+                ? DateTime.fromISO(searchParams.dateRange[1].toString()).toFormat('dd MMM')
+                : 'Return'}
             </p>
 
-            <p className='search-params-label'>
-              <FontAwesomeIcon icon={faPeopleGroup} />
-              Traveller{searchParams.passengers.adults + searchParams.passengers.children + searchParams.passengers.infants > 1 ? 's' : ''}
+            <p className="search-params-label"><FontAwesomeIcon icon={faPeopleGroup} /> Travelers</p>
+            <p>
+              {searchParams.passengers.adults} Adult{searchParams.passengers.adults > 1 ? 's' : ''}
+              {searchParams.passengers.children > 0 && `, ${searchParams.passengers.children} Child${searchParams.passengers.children > 1 ? 'ren' : ''}`}
+              {searchParams.passengers.infants > 0 && `, ${searchParams.passengers.infants} Infant${searchParams.passengers.infants > 1 ? 's' : ''}`}
             </p>
-            {
-              searchParams.passengers.adults > 0 && (
-                <p>
-                  {searchParams.passengers.adults} Adult{searchParams.passengers.adults > 1 ? 's' : ''}
-                </p>
-              )
-            }
-            {
-              searchParams.passengers.children > 0 && (
-                <p>
-                  {searchParams.passengers.children} Child{searchParams.passengers.children > 1 ? 'ren' : ''}
-                </p>
-              )
-            }
-            {
-              searchParams.passengers.infants > 0 && (
-                <p>
-                  {searchParams.passengers.infants} Infant{searchParams.passengers.infants > 1 ? 's' : ''}
-                </p>
-              )
-            }
-            {
-              searchParams.passengers.rooms > 0 && (
-                <p>
-                  {searchParams.passengers.rooms} Room{searchParams.passengers.rooms > 1 ? 's' : ''}
-                </p>
-              )
-            }
+            <p>{searchParams.passengers.rooms} Room{searchParams.passengers.rooms > 1 ? 's' : ''}</p>
+
             <div className="search-parameters-overlay">
               <FontAwesomeIcon icon={faEdit} className="edit-icon" />
             </div>
           </div>
         </div>
 
-        {/* Use choices */}
         <div className="selected-items">
-          <h2>Your choices</h2>
+          <h2>Your Selections</h2>
           <hr />
+          {
+            steps
+            .filter(step => step.key !== 'search' && step.key !== 'overview')
+            .map(({ key, label }) => {
+              let completed = false;
+              let disabled = false;
+              let displayValue = "Not selected";
 
-          <div 
-            className={`selected-item ${currentStep === 'destination' ? 'active' : ''} ${destination ? 'completed' : ''}`}
-            onClick={() => onStepChange('destination')}
-          >
-            <p className='selected-item-label'>
-              <FontAwesomeIcon icon={faUmbrellaBeach} className='mr-2' />
-              Destination:
-            </p>
-            <p>
-              {
-                destination 
-                ? `${destination.city}, ${destination.country}`
-                : "Not selected"
+              switch (key) {
+                case 'destination':
+                  completed = !!destination;
+                  displayValue = destination ? `${destination.city}, ${destination.country}` : displayValue;
+                  break;
+                case 'departure':
+                  completed = !!departureFlight;
+                  disabled = !stepAvailability.canSelectDeparture;
+                  displayValue = departureFlight
+                    ? DateTime.fromISO(departureFlight.departureTime.toString()).toFormat("dd MMM HH:mm")
+                    : disabled ? "No flights available" : displayValue;
+                  break;
+                case 'accommodation':
+                  completed = !!accommodation;
+                  disabled = !stepAvailability.canSelectAccommodation;
+                  displayValue = accommodation ? accommodation.name : disabled ? "No accommodations available" : displayValue;
+                  break;
+                case 'return':
+                  completed = !!returnFlight;
+                  disabled = !stepAvailability.canSelectReturn;
+                  displayValue = returnFlight
+                    ? DateTime.fromISO(returnFlight.departureTime.toString()).toFormat("dd MMM HH:mm")
+                    : disabled ? "No flights available" : displayValue;
+                  break;
+                case 'search':
+                  displayValue = "Modify search";
+                  completed = true;
+                  break;
+                case 'overview':
+                  displayValue = "Trip summary";
+                  completed = true;
+                  break;
               }
-            </p>
-          </div>
 
-          <div 
-            className={`selected-item ${currentStep === 'departure' ? 'active' : ''} ${departureFlight ? 'completed' : ''} ${!stepAvailability.canSelectDeparture ? 'disabled' : ''}`}
-            onClick={() => handleStepClick('departure')}
-          >
-            <p className='selected-item-label'>
-              <FontAwesomeIcon icon={faPlaneDeparture} className='mr-2'/>
-              Departure:
-            </p>
-            <p>
-              {
-                !stepAvailability.canSelectDeparture && (
-                  <span className="unavailable-text">No flights available</span>
-                )
-              }
-              {
-                departureFlight
-                ? <span>{DateTime.fromISO(departureFlight.departureTime.toString()).toFormat("dd MMM HH:mm")}</span> 
-                : stepAvailability.canSelectDeparture 
-                  ? "Not selected"
-                  : ''
-              }
-            </p>
-          </div>
-
-          <div
-            className={`selected-item ${currentStep === 'accomodation' ? 'active' : ''} ${accommodation ? 'completed' : ''} ${!stepAvailability.canSelectAccommodation ? 'disabled' : ''}`}
-            onClick={() => handleStepClick('accomodation')}
-          >
-            <p className='selected-item-label'>
-              <FontAwesomeIcon icon={faKey} className='mr-2'/>
-              Accommodation:
-            </p>
-            <p>
-              {
-                !stepAvailability.canSelectAccommodation && (
-                  <span className="unavailable-text">No accommodations available</span>
-                )
-              }
-              {
-                accommodation
-                ? `${accommodation?.name}`
-                : stepAvailability.canSelectAccommodation 
-                  ? "Not selected"
-                  : ''
-              }
-            </p>
-          </div>
-
-          <div 
-            className={`selected-item ${currentStep === 'return' ? 'active' : ''} ${returnFlight ? 'completed' : ''} ${!stepAvailability.canSelectReturn ? 'disabled' : ''}`}
-            onClick={() => handleStepClick('return')}
-          >
-            <p className='selected-item-label'>
-              <FontAwesomeIcon icon={faPlaneArrival} className='mr-2'/>
-              Return:
-            </p>
-            <p>
-              {
-                !stepAvailability.canSelectReturn && (
-                  <span className="unavailable-text">No flights available</span>
-                )
-              }
-              {
-                returnFlight
-                ? <span>{DateTime.fromISO(returnFlight.departureTime.toString()).toFormat("dd MMM HH:mm")}</span> 
-                : stepAvailability.canSelectReturn
-                  ? "Not selected"
-                  : ''
-              }
-            </p>
-          </div>
+              return (
+                <div
+                  key={key}
+                  className={`selected-item ${currentStep === key ? 'active' : ''} ${completed ? 'completed' : ''} ${disabled ? 'disabled' : ''}`}
+                  onClick={() => !disabled && handleStepClick(key)}
+                >
+                  <p className="selected-item-label">{label}:</p>
+                  <p>{displayValue}</p>
+                </div>
+              );
+            })
+          }
         </div>
 
-        {/* Buttons */}
+        {/* Overview Button */}
         <TripOverviewButton onClick={() => handleStepClick('overview')} />
       </div>
-      
     </div>
   );
 };

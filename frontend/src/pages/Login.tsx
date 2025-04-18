@@ -44,6 +44,8 @@ export default function Login() {
           type="email"
           value={email}
           onChange={e => setEmail(e.target.value)}
+          pattern='^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+          required
         />
         <input
           className="w-full p-2 mb-2 border"
@@ -51,6 +53,7 @@ export default function Login() {
           type="password"
           value={password}
           onChange={e => setPassword(e.target.value)}
+          required
         />
         <label className="flex items-center mb-4 gap-2">
           <input

@@ -30,14 +30,12 @@ class SearchTripsController extends Controller
         $accomodationsProviders = $providerService->getActiveAccomodationProviders();
 
 
-         // Get departure flights with arrival airports
         $departureFlights = Flight::with(['arrivalAirport',])
             ->where('departure_airport_id', $departureAirportId)
             ->whereDate('departure_date', $tripsSearchParams->getDepartureDate())
             ->whereIn('provider_id', $flightsProviders)
             ->get();
         
-       // Get accomodations with their offers for destination airports
         $accomodations = accomodation::with(['offers' => function($query) use ($tripsSearchParams) {
             $query->whereDate('check_in', $tripsSearchParams->getDepartureDate())
                 ->whereDate('check_out', $tripsSearchParams->getReturnDate());
@@ -47,9 +45,11 @@ class SearchTripsController extends Controller
         )
         ->whereIn('provider_id', $accomodationsProviders)
         ->get()
+        ->filter(function ($accommodation) {
+            return $accommodation->offers->isNotEmpty();
+        })
         ->groupBy('airport_id');
 
-        /// Get return flights
         $returnFlights = Flight::whereIn('departure_airport_id', 
                 $departureFlights->pluck('arrival_airport_id')->unique()
             )
